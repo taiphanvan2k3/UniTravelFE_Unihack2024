@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { forwardRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
@@ -25,9 +26,7 @@ const InputForm = forwardRef(function InputForm({ name, type, placeholder, onCha
                     </button>
                 )}
             </div>
-            <div>
-                <p className="text-red-500">{error}</p>
-            </div>
+            <p className="mt-2">{error && error["message"]}</p>
         </div>
     );
 });

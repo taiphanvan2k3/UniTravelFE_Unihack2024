@@ -28,8 +28,20 @@ function SignIn() {
                 <div className="flex flex-col items-start mt-10">
                     <Header title="Sign In" description="Welcome back! Please enter your details" />
                     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col mt-1 w-full">
-                        <InputForm error={errors.email} {...register("email")} type="email" name="email" />
-                        <InputForm error={errors.password} {...register("password")} type="password" name="password" />
+                        <InputForm
+                            error={errors.email}
+                            {...register("email")}
+                            type="email"
+                            name="email"
+                            placeholder="Enter your email"
+                        />
+                        <InputForm
+                            error={errors.password}
+                            {...register("password")}
+                            type="password"
+                            name="password"
+                            placeholder="Enter your password"
+                        />
                         <div className="w-full flex justify-end items-center">
                             <Link className="text-black m-3 text-sm hover:text-sky-400 duration-300 ease-in-out" to="/">
                                 Forgot Password
