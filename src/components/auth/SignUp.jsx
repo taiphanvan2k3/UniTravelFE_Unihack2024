@@ -20,8 +20,21 @@ function SignUp() {
         },
         resolver: zodResolver(SignUpSchema),
     });
-    const onSubmit = (data) => {
-        console.log(data);
+    const onSubmit = async (data) => {
+        const newData = { email: data.email, password: data.password };
+        const res = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_SIGNUP_URL}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newData),
+        });
+        if (res.ok) {
+            const result = await res.json();
+            console.log(result);
+        } else {
+            console.log("Failed to sign up");
+        }
     };
     return (
         <div className="flex flex-col w-1/2 justify-start items-center">

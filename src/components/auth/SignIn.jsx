@@ -5,7 +5,7 @@ import Header from "./Header";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginSchema } from "@/schemas";
-
+import { useToast } from "@chakra-ui/react";
 function SignIn() {
     const {
         register,
@@ -19,8 +19,29 @@ function SignIn() {
         },
         resolver: zodResolver(LoginSchema),
     });
-    const onSubmit = (data) => {
-        console.log(data);
+    const toast = useToast();
+    const onSubmit = async (data) => {
+        const res = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_LOGIN_URL}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
+        if (res.ok) {
+            const result = await res.json();
+            const expires = new Date();
+            expires.setTime(expires.getTime() + 7 * 24 * 60 * 60 * 1000); // 7 days in milliseconds
+            document.cookie = `access-token=${result.token}; path=/; expires=${expires.toUTCString()};`;
+            toast({
+                title: "Login successfully",
+                status: "success",
+                duration: 9000,
+                isClosable: true,
+            });
+        } else {
+            console.log("error");
+        }
     };
     return (
         <div className="flex flex-col w-1/2 justify-start items-center">
@@ -49,7 +70,7 @@ function SignIn() {
                         </div>
                         <Button type="submit">Sign In</Button>
                         <div className="flex justify-center items-center gap-2 mt-4">
-                            <p className="text-black ">Don't have account? </p>
+                            <p className="text-black ">Do not have account? </p>
                             <Link to="/auth/signup" className="hover:underline font-bold">
                                 Sign Up
                             </Link>

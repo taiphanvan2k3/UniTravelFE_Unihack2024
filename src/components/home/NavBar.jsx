@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import DropdownItem from "./DropdownItem";
 import NavItem from "./NavItem";
 import { logo } from "@/assets/images";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
 function NavBar() {
     const pages = [
         { title: "Home", path: "/" },
@@ -37,9 +39,10 @@ function NavBar() {
                 <div>
                     <Link
                         to="/auth/signin"
-                        className="bg-sky-400 text-white px-6 py-2 rounded-lg border-2 border-sky-400 hover:bg-transparent hover:text-sky-400 duration-300 ease-in-out font-semibold text-lg"
+                        className="bg-black text-white px-6 py-3 rounded-2xl border-2 border-black duration-300 ease-in-out font-semibold text-lg hover:bg-white hover:text-black"
                     >
                         Sign In
+                        <FontAwesomeIcon className="ml-2" icon={faUser} />
                     </Link>
                 </div>
             </div>
