@@ -8,7 +8,7 @@ function Hero() {
                 <div className="col-span-1 flex flex-col ml-10">
                     <div className="">
                         <p className="text-lg font-bold">
-                            Savor life's richness, explore widely{" "}
+                            Savor life is richness, explore widely{" "}
                             <span className="text-slate-400 font-semibold">
                                 {" "}
                                 - finding identity and purpose through exhilarating travel adventures

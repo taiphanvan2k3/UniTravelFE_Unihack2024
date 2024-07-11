@@ -1,5 +1,4 @@
 import Hero from "@/components/home/Hero";
-import Carousel from "@/components/home/Carousel/Carousel";
 import {
     Card,
     CardBody,
@@ -10,12 +9,9 @@ import {
     Center,
     SimpleGrid,
     Stack,
-    IconButton,
-    Button,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { japan, chinese, korea, vietnam } from "@/assets/images";
-import CarouselItem from "@/components/home/Carousel/CarouselItem";
 import { faArrowRightLong, faArrowUp, faLocationDot, faStar } from "@fortawesome/free-solid-svg-icons";
 function HomePage() {
     const places = [

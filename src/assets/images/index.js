@@ -9,4 +9,5 @@ import japan from "./japan.jpg";
 import chinese from "./chinese.jpg";
 import korea from "./korea.png";
 import vietnam from "./image_5.jpg";
-export { hoian, logo, logo_1, hero, travel_1, travel, Bana, japan, chinese, korea, vietnam };
+import avatar from "./avatar.jpg";
+export { hoian, logo, logo_1, hero, travel_1, travel, Bana, japan, chinese, korea, vietnam, avatar };
