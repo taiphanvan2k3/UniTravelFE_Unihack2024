@@ -4,11 +4,19 @@ import NavItem from "./NavItem";
 import { logo } from "@/assets/images";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { useContext } from "react";
+import { AuthContext } from "@/contexts/AuthContext";
+import ROUTE_CONSTANTS from "@/constants/routes";
+import { DefaultAvatar01 } from "@/assets/images";
+import UserDropdown from "./UserDropdown";
+
 function NavBar() {
+    console.log("Navbar re-render");
+    const { auth } = useContext(AuthContext);
     const pages = [
-        { title: "Home", path: "/" },
-        { title: "Bookings", path: "/booking" },
-        { title: "Reviews", path: "/reviews" },
+        { title: "Home", path: ROUTE_CONSTANTS.HOME_PAGE },
+        { title: "Bookings", path: ROUTE_CONSTANTS.BOOKING_PAGE },
+        { title: "Reviews", path: ROUTE_CONSTANTS.REVIEWS_PAGE },
         {
             title: "Supports",
             children: [
@@ -17,10 +25,13 @@ function NavBar() {
             ],
         },
     ];
+
     return (
         <nav className="w-full px-8 py-2">
             <div className="flex justify-around items-center">
-                <img src={logo} alt="" className="h-28" />
+                <Link to={ROUTE_CONSTANTS.HOME_PAGE}>
+                    <img src={logo} alt="" className="h-28" />
+                </Link>
                 <div className="flex gap-12 justify-between">
                     {pages.map((page, index) => {
                         if (page.children) {
@@ -37,13 +48,17 @@ function NavBar() {
                     })}
                 </div>
                 <div>
-                    <Link
-                        to="/auth/signin"
-                        className="bg-black text-white px-6 py-3 rounded-2xl border-2 border-black duration-300 ease-in-out font-semibold text-lg hover:bg-white hover:text-black"
-                    >
-                        Sign In
-                        <FontAwesomeIcon className="ml-2" icon={faUser} />
-                    </Link>
+                    {auth.isAuthenticated ? (
+                        <UserDropdown userInfo={auth.user} />
+                    ) : (
+                        <Link
+                            to="/auth/sign-in"
+                            className="bg-black text-white px-6 py-3 rounded-2xl border-2 border-black duration-300 ease-in-out font-semibold text-lg hover:bg-white hover:text-black"
+                        >
+                            Sign In
+                            <FontAwesomeIcon className="ml-2" icon={faUser} />
+                        </Link>
+                    )}
                 </div>
             </div>
         </nav>

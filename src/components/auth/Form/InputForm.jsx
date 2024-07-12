@@ -2,6 +2,7 @@
 import { forwardRef, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+
 // eslint-disable-next-line react/prop-types
 const InputForm = forwardRef(function InputForm({ name, type, placeholder, onChange, error, ...rest }, ref) {
     const [showPassword, setShowPassword] = useState(false);
@@ -10,7 +11,7 @@ const InputForm = forwardRef(function InputForm({ name, type, placeholder, onCha
             <label className="mb-2 capitalize text-base font-semibold" htmlFor={name}>
                 {name}
             </label>
-            <div className="w-full border-2 border-black rounded-md py-2 text-md px-3 flex items-center">
+            <div className="w-full border-2 border-gray-400 rounded-md py-2 text-md px-3 flex items-center">
                 <input
                     type={showPassword ? "text" : type}
                     name={name}

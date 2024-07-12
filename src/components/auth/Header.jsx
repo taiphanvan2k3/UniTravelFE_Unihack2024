@@ -1,4 +1,3 @@
-// eslint-disable-next-line react/prop-types
 function Header({ title, description }) {
     return (
         <div>

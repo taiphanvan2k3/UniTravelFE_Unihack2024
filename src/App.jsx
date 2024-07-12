@@ -8,17 +8,21 @@ import AdminLayout from "./layouts/admin/AdminLayout";
 import AdminPage from "./pages/admin";
 import DashBoardPage from "./pages/admin/dashboard";
 import UsersPage from "./pages/admin/users";
+import ReviewsPage from "./pages/reviews";
 
 export default function App() {
+    console.log("App re-render");
     return (
         <Router>
             <Routes>
                 <Route path="/" element={<HomeLayout />}>
                     <Route index element={<HomePage />} />
-                    <Route path="/auth" element={<AuthLayout />}>
-                        <Route index element={<Navigate to="/auth/signin" />} />
-                        <Route path="signin" element={<SignInPage />} />
-                        <Route path="signup" element={<SignUpPage />} />
+                    <Route path="booking" element={<HomePage />} />
+                    <Route path="reviews" element={<ReviewsPage />} />
+                    <Route path="auth" element={<AuthLayout />}>
+                        <Route index element={<Navigate to="/auth/sign-in" />} />
+                        <Route path="sign-in" element={<SignInPage />} />
+                        <Route path="sign-up" element={<SignUpPage />} />
                     </Route>
                 </Route>
                 <Route path="/admin" element={<AdminLayout />}>

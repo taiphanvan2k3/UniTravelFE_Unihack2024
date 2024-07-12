@@ -2,15 +2,17 @@ import { logo_1 } from "@/assets/images";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFacebook, faGoogle, faLinkedin } from "@fortawesome/free-brands-svg-icons";
 import { faEnvelope, faLocationArrow, faPhone } from "@fortawesome/free-solid-svg-icons";
+
 function Footer() {
     const navItems = ["Home", "Bookings", "Reviews", "Supports"];
+    console.log("Footer re-render");
     return (
         <footer className="w-full bg-black text-white mt-10 p-12 grid grid-cols-4 ">
             <div className={"col-span-1"}>
                 <div className={"flex flex-col gap-6 items-center justify-center"}>
                     <div>
                         <h1 className="text-2xl font-bold">Let's have a trip</h1>
-                        <p className="text-md text-slate-400">Welcome to out website</p>
+                        <p className="text-md text-slate-400">Welcome to our website</p>
                     </div>
                     <img src={logo_1} alt="logo" className="size-28 rounded-full" />
                     <div className="flex gap-4">

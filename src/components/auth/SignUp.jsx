@@ -5,6 +5,7 @@ import Header from "./Header";
 import { useForm } from "react-hook-form";
 import { SignUpSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import ROUTE_CONSTANTS from "@/constants/routes";
 
 function SignUp() {
     const {
@@ -20,9 +21,10 @@ function SignUp() {
         },
         resolver: zodResolver(SignUpSchema),
     });
+
     const onSubmit = async (data) => {
         const newData = { email: data.email, password: data.password };
-        const res = await fetch(`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_SIGNUP_URL}`, {
+        const res = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}${import.meta.env.VITE_SIGNUP_URL}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -39,7 +41,7 @@ function SignUp() {
     return (
         <div className="flex flex-col w-1/2 justify-start items-center">
             <div className="w-3/5">
-                <div className="flex flex-col items-start mt-10">
+                <div className="flex flex-col items-start mt-4">
                     <Header title="Sign Up" description="Please enter your profile in signup" />
                     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col mt-4 w-full">
                         <InputForm
@@ -68,7 +70,7 @@ function SignUp() {
                         <Button>Sign In</Button>
                         <div className="flex justify-center items-center gap-2 mt-4">
                             <p className="text-black ">Already have account? </p>
-                            <Link to="/auth/signin" className="hover:underline font-bold">
+                            <Link to={ROUTE_CONSTANTS.SIGN_IN_PAGE} className="hover:underline font-bold">
                                 Sign In
                             </Link>
                         </div>
