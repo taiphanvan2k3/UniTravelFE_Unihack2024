@@ -31,6 +31,7 @@ export default function App() {
                     <Route index element={<AdminPage />} />
                     <Route path="dashboard" element={<DashBoardPage />} />
                     <Route path="users" element={<UsersPage />} />
+                    <Route path="location" element={<LocationPage />} />
                 </Route>
             </Routes>
         </Router>
