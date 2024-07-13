@@ -1,19 +1,10 @@
 import Hero from "@/components/home/Hero";
-import {
-    Card,
-    CardBody,
-    Flex,
-    Image,
-    Container,
-    Text,
-    Center,
-    SimpleGrid,
-    Stack,
-} from "@chakra-ui/react";
+import { Card, CardBody, Flex, Image, Container, Text, Center, SimpleGrid, Stack } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { japan, chinese, korea, vietnam } from "@/assets/images";
 import { faArrowRightLong, faArrowUp, faLocationDot, faStar } from "@fortawesome/free-solid-svg-icons";
 function HomePage() {
+    console.log("Home Page re-render");
     const places = [
         {
             image: japan,
