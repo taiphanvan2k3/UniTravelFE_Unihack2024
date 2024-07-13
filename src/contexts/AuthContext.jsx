@@ -14,20 +14,18 @@ const AuthProvider = ({ children }) => {
     const verifyToken = async () => {
         try {
             const response = await callAPI("/auth/verify-token", "POST");
-            if (response) {
-                setAuth({
-                    isAuthenticated: true,
-                    user: response.user,
-                    token: response.token,
-                });
-            } else {
-                setAuth({
-                    isAuthenticated: false,
-                    user: null,
-                    token: null,
-                });
-            }
-        } catch (error) {}
+            setAuth({
+                isAuthenticated: true,
+                user: response.user,
+                token: response.token,
+            });
+        } catch (error) {
+            setAuth({
+                isAuthenticated: false,
+                user: null,
+                token: null,
+            });
+        }
     };
 
     useEffect(() => {

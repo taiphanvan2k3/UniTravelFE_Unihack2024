@@ -40,8 +40,9 @@ function SignIn() {
     });
 
     const onSubmit = async (data) => {
-        const responseInfo = await callAPI(import.meta.env.VITE_LOGIN_URL, "POST", data, null, setLoading);
-        if (responseInfo) {
+        console.log(data);
+        try {
+            const responseInfo = await callAPI(import.meta.env.VITE_LOGIN_URL, "POST", data, null, setLoading);
             setAuth({
                 isAuthenticated: true,
                 user: {
@@ -62,8 +63,14 @@ function SignIn() {
             const redirect = getCookieValue("redirect") || ROUTE_CONSTANTS.HOME_PAGE;
             setCookie("redirect", "", 0);
             navigate(redirect);
-        } else {
-            console.log("error");
+        } catch (error) {
+            toast({
+                title: "Username or password is incorrect",
+                status: "error",
+                position: "bottom-right",
+                duration: 3000,
+                isClosable: true,
+            });
         }
     };
 
@@ -88,7 +95,10 @@ function SignIn() {
                             placeholder="Enter your password"
                         />
                         <div className="w-full flex justify-end items-center">
-                            <Link className="text-black m-3 text-sm hover:text-sky-400 duration-300 ease-in-out" to="/">
+                            <Link
+                                className="text-black m-3 text-sm hover:text-sky-400 duration-300 ease-in-out"
+                                to="/auth/forgot-password"
+                            >
                                 Forgot Password
                             </Link>
                         </div>

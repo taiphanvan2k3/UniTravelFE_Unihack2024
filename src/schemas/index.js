@@ -1,16 +1,5 @@
-import { z } from "zod";
-const LoginSchema = z.object({
-    email: z.string().email("Email should have @"),
-    password: z.string().min(8, { message: "Password must be at least 8 characters long" }),
-});
-const SignUpSchema = z
-    .object({
-        email: z.string().email("Email should have @"),
-        password: z.string().min(8, { message: "Password must be at least 8 characters" }),
-        confirmPassword: z.string().min(8, { message: "Confirm Password must be at least 8 charaters" }),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-        message: "Password not match",
-        path: ["confirmPassword"],
-    });
-export { LoginSchema, SignUpSchema };
+import LoginSchema from "./auth/LoginSchema";
+import SignUpSchema from "./auth/SignUpSchema";
+import ForgotPasswordSchema from "./auth/ForgetPasswordSchema";
+
+export { LoginSchema, SignUpSchema, ForgotPasswordSchema };

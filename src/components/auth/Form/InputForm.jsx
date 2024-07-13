@@ -15,6 +15,7 @@ const InputForm = forwardRef(function InputForm({ name, type, placeholder, onCha
                 <input
                     type={showPassword ? "text" : type}
                     name={name}
+                    id={name}
                     placeholder={placeholder}
                     className="outline-none w-full"
                     onChange={onChange}

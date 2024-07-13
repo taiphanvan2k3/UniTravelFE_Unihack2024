@@ -6,8 +6,6 @@ import { setCookie } from "@/services/utils";
 
 function ReviewsPage() {
     const { auth } = useContext(AuthContext);
-    console.log(auth);
-
     if (!auth.isAuthenticated) {
         // Điều hướng người dùng đến trang đăng nhập nếu chưa đăng nhập
         setCookie("redirect", ROUTES_CONSTANTS.REVIEWS_PAGE, 10 * 60 * 1000);

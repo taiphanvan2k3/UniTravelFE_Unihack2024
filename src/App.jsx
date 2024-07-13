@@ -9,6 +9,7 @@ import AdminPage from "./pages/admin";
 import DashBoardPage from "./pages/admin/dashboard";
 import UsersPage from "./pages/admin/users";
 import ReviewsPage from "./pages/reviews";
+import ForgotPassword from "./components/auth/ForgotPassword";
 
 export default function App() {
     console.log("App re-render");
@@ -23,6 +24,7 @@ export default function App() {
                         <Route index element={<Navigate to="/auth/sign-in" />} />
                         <Route path="sign-in" element={<SignInPage />} />
                         <Route path="sign-up" element={<SignUpPage />} />
+                        <Route path="forgot-password" element={<ForgotPassword />} />
                     </Route>
                 </Route>
                 <Route path="/admin" element={<AdminLayout />}>

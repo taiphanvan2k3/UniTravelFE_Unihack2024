@@ -1,9 +1,9 @@
 // eslint-disable-next-line react/prop-types
-function Button({ children, type }) {
+function Button({ children, type, styles }) {
     return (
         <button
             type={type}
-            className="w-full bg-black text-white p-2 rounded-md font-bold hover:bg-transparent hover:text-black border-2 border-black duration-300 ease-in-out"
+            className={`${styles} w-full bg-black text-white p-2 rounded-md font-bold hover:bg-transparent hover:text-black border-2 border-black duration-300 ease-in-out`}
         >
             {children}
         </button>
