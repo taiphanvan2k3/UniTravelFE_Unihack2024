@@ -7,7 +7,6 @@ import { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
 function AdminLayout() {
-    console.log("AdminLayout re-render");
     const { auth } = useContext(AuthContext);
     if (!auth.isAuthenticated) {
         localStorage.setItem("redirect", "/admin");

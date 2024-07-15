@@ -10,9 +10,9 @@ import DashBoardPage from "./pages/admin/dashboard";
 import UsersPage from "./pages/admin/users";
 import ReviewsPage from "./pages/reviews";
 import ForgotPassword from "./components/auth/ForgotPassword";
+import LocationPage from "./pages/admin/location";
 
 export default function App() {
-    console.log("App re-render");
     return (
         <Router>
             <Routes>
