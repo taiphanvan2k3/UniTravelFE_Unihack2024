@@ -1,6 +1,6 @@
 import Header from "@/components/admin/Header";
 import SideBar from "@/components/admin/SideBar";
-import ROUTE_CONSTANTS from "@/constants/routes";
+import { ROUTE_CONSTANTS } from "@/constants/routes";
 import { AuthContext } from "@/contexts/AuthContext";
 import { Grid, GridItem } from "@chakra-ui/react";
 import { useContext } from "react";

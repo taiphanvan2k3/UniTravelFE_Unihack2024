@@ -18,12 +18,18 @@ const callAPI = async (url, method = "GET", data = null, headers = {}, setLoadin
         if (setLoading) {
             setLoading(true);
         }
-        const response = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}${url}`, options);
-        const responseData = await response.json();
 
+        const response = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}${url}`, options);
         if (!response.ok) {
-            throw new Error(response.message || "API call failed");
+            try {
+                const errorData = await response.json();
+                throw new Error(errorData.message);
+            } catch (error) {
+                throw new Error(error.message || "Something went wrong!");
+            }
         }
+
+        const responseData = await response.json();
         return responseData;
     } finally {
         if (setLoading) {

@@ -4,11 +4,11 @@ import InputForm from "./Form/InputForm";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { ForgotPasswordSchema } from "@/schemas";
-import ROUTE_CONSTANTS from "@/constants/routes";
 import { Link } from "react-router-dom";
 import Button from "./Form/Button";
 import { useToast } from "@chakra-ui/react";
 import { callAPI } from "@/services/api.service";
+import { API_ROUTES, ROUTE_CONSTANTS } from "@/constants/routes";
 
 const ForgotPassword = () => {
     const {
@@ -34,7 +34,7 @@ const ForgotPassword = () => {
         };
 
         try {
-            await callAPI(import.meta.env.VITE_PASSWORD_RESET_URL, "POST", { email: data.email });
+            await callAPI(API_ROUTES.LOG_OUT, "POST", { email: data.email });
             toastContent.title = "Reset password successfully";
             toast(toastContent);
             setShowEmailLink(true);
