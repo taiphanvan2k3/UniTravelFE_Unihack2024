@@ -5,6 +5,7 @@ const ROUTE_CONSTANTS = {
     SIGN_UP_PAGE: "/auth/sign-up",
     REVIEWS_PAGE: "/reviews",
     BOOKING_PAGE: "/booking",
+    PROVINCES_PAGE: "/provinces",
 };
 
 const API_ROUTES = {

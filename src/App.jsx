@@ -11,6 +11,8 @@ import UsersPage from "./pages/admin/users";
 import ReviewsPage from "./pages/reviews";
 import ForgotPassword from "./components/auth/ForgotPassword";
 import LocationPage from "./pages/admin/location";
+import Country from "./components/home/Country";
+import ProvincesPage from "./pages/home/provinces";
 
 export default function App() {
     return (
@@ -20,12 +22,14 @@ export default function App() {
                     <Route index element={<HomePage />} />
                     <Route path="booking" element={<HomePage />} />
                     <Route path="reviews" element={<ReviewsPage />} />
+                    <Route path="provinces" element={<ProvincesPage />} />
                     <Route path="auth" element={<AuthLayout />}>
                         <Route index element={<Navigate to="/auth/sign-in" />} />
                         <Route path="sign-in" element={<SignInPage />} />
                         <Route path="sign-up" element={<SignUpPage />} />
                         <Route path="forgot-password" element={<ForgotPassword />} />
                     </Route>
+                    <Route path="/country/:countryId" element={<Country />} />
                 </Route>
                 <Route path="/admin" element={<AdminLayout />}>
                     <Route index element={<AdminPage />} />

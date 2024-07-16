@@ -8,11 +8,10 @@ import Bana from "./bana.jpg";
 import japan from "./japan.jpg";
 import chinese from "./chinese.jpg";
 import korea from "./korea.png";
-import vietnam from "./image_5.jpg";
 import avatar from "./avatar.jpg";
 import DefaultAvatar01 from "./default_avatars/avatar01.jpg";
 import Loading from "./loading.gif";
-
+import vietnam from "./vietnam.jpg";
 export {
     HoiAn,
     logo,
@@ -24,8 +23,8 @@ export {
     japan,
     chinese,
     korea,
-    vietnam,
     avatar,
     DefaultAvatar01,
     Loading,
+    vietnam,
 };

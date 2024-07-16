@@ -5,28 +5,6 @@ import { japan, chinese, korea, vietnam } from "@/assets/images";
 import { faArrowRightLong, faArrowUp, faLocationDot, faStar } from "@fortawesome/free-solid-svg-icons";
 function HomePage() {
     console.log("Home Page re-render");
-    const places = [
-        {
-            image: japan,
-            title: "Japan",
-            reviews: "4.5",
-        },
-        {
-            image: chinese,
-            title: "China",
-            reviews: "4.2",
-        },
-        {
-            image: korea,
-            title: "Korea",
-            reviews: "4.7",
-        },
-        {
-            image: vietnam,
-            title: "Vietnam",
-            reviews: "4.3",
-        },
-    ];
     const destination = [
         {
             image: japan,
@@ -62,33 +40,13 @@ function HomePage() {
             <Container justifyContent={"center"} marginTop={"20px"} marginBottom={"20px"}>
                 <Center>
                     <Text fontSize={"3xl"} fontWeight={"bold"}>
-                        Popular Country
+                        Popular 
                     </Text>
                 </Center>
             </Container>
             <div className="p-10">
                 <SimpleGrid columns={[2, null, 4]} spacing="20px">
-                    {places.map((item, index) => (
-                        <Card key={index} bgColor="gray.100">
-                            <CardBody width="100%" textColor={"gray.500"}>
-                                <Image src={item.image} className="h-60 object-cover min-w-full" />
-                                <Container marginTop="10px">
-                                    <Flex justifyContent={"space-between"}>
-                                        <Flex alignItems="center" gap={2}>
-                                            <FontAwesomeIcon icon={faLocationDot} />
-                                            <Text fontSize={"md"} fontWeight={"bold"}>
-                                                {item.title}
-                                            </Text>
-                                        </Flex>
-                                        <Flex alignItems="center" gap={2}>
-                                            <FontAwesomeIcon icon={faStar} />
-                                            <Text fontSize={"md"}>{item.reviews}k</Text>
-                                        </Flex>
-                                    </Flex>
-                                </Container>
-                            </CardBody>
-                        </Card>
-                    ))}
+                   
                 </SimpleGrid>
                 <Center margin={"30px"}>
                     <button className=" bg-white px-6 py-4 rounded-full text-sky-400 font-bold border-2 border-sky-400 duration-300 ease-in-out hover:bg-sky-300 hover:text-white">

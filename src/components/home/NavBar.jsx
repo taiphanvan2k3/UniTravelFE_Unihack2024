@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { useContext } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
-import { ROUTE_CONSTANTS } from "@/constants/routes";
+import ROUTE_CONSTANTS from "@/constants/routes";
 import UserDropdown from "./UserDropdown";
 
 function NavBar() {
@@ -14,6 +14,7 @@ function NavBar() {
     const { auth } = useContext(AuthContext);
     const pages = [
         { title: "Home", path: ROUTE_CONSTANTS.HOME_PAGE },
+        { title: "Provinces", path: ROUTE_CONSTANTS.PROVINCES_PAGE },
         { title: "Bookings", path: ROUTE_CONSTANTS.BOOKING_PAGE },
         { title: "Reviews", path: ROUTE_CONSTANTS.REVIEWS_PAGE },
         {
