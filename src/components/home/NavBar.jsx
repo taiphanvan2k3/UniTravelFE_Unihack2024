@@ -6,8 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { useContext } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
-import ROUTE_CONSTANTS from "@/constants/routes";
-import { DefaultAvatar01 } from "@/assets/images";
+import { ROUTE_CONSTANTS } from "@/constants/routes";
 import UserDropdown from "./UserDropdown";
 
 function NavBar() {

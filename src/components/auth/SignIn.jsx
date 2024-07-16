@@ -8,10 +8,10 @@ import { LoginSchema } from "@/schemas";
 import { useToast } from "@chakra-ui/react";
 import { useContext, useEffect } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
-import ROUTE_CONSTANTS from "@/constants/routes";
 import { getCookieValue, setCookie } from "@/services/utils";
 import { callAPI } from "@/services/api.service";
 import { LoadingContext } from "@/contexts/LoadingContext";
+import { API_ROUTES, ROUTE_CONSTANTS } from "@/constants/routes";
 
 function SignIn() {
     const { auth, setAuth } = useContext(AuthContext);
@@ -40,9 +40,8 @@ function SignIn() {
     });
 
     const onSubmit = async (data) => {
-        console.log(data);
         try {
-            const responseInfo = await callAPI(import.meta.env.VITE_LOGIN_URL, "POST", data, null, setLoading);
+            const responseInfo = await callAPI(API_ROUTES.SIGN_IN, "POST", data, null, setLoading);
             setAuth({
                 isAuthenticated: true,
                 user: {
@@ -65,7 +64,10 @@ function SignIn() {
             navigate(redirect);
         } catch (error) {
             toast({
-                title: "Username or password is incorrect",
+                title:
+                    error.message == "Invalid email or password"
+                        ? "Email or password is incorrect"
+                        : "Internal server error",
                 status: "error",
                 position: "bottom-right",
                 duration: 3000,

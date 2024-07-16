@@ -1,3 +1,4 @@
+// Các route của các trang của ứng dụng ReactJS
 const ROUTE_CONSTANTS = {
     HOME_PAGE: "/",
     SIGN_IN_PAGE: "/auth/sign-in",
@@ -6,4 +7,14 @@ const ROUTE_CONSTANTS = {
     BOOKING_PAGE: "/booking",
 };
 
-export default ROUTE_CONSTANTS;
+const API_ROUTES = {
+    //#region Auth
+    SIGN_IN: "/auth/login-with-email",
+    SIGN_UP: "/auth/register-with-email",
+    LOG_OUT: "/auth/sign-out",
+    VERIFY_TOKEN: "/auth/verify-token",
+    CHECK_EMAIL_EXIST: "/auth/check-email-exist",
+    //#endregion
+};
+
+export { API_ROUTES, ROUTE_CONSTANTS };

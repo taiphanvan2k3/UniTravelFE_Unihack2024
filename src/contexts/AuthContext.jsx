@@ -1,6 +1,7 @@
 import { createContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { callAPI } from "@/services/api.service";
+import { API_ROUTES } from "@/constants/routes";
 
 const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
@@ -13,7 +14,7 @@ const AuthProvider = ({ children }) => {
 
     const verifyToken = async () => {
         try {
-            const response = await callAPI("/auth/verify-token", "POST");
+            const response = await callAPI(API_ROUTES.VERIFY_TOKEN, "POST");
             setAuth({
                 isAuthenticated: true,
                 user: response.user,
