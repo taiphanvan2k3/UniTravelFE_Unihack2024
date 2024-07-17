@@ -63,11 +63,12 @@ function SignIn() {
             setCookie("redirect", "", 0);
             navigate(redirect);
         } catch (error) {
+            const errorMessage =
+                error.message == "Invalid email or password" || "Email is not verified"
+                    ? error.message
+                    : "Internal server error";
             toast({
-                title:
-                    error.message == "Invalid email or password"
-                        ? "Email or password is incorrect"
-                        : "Internal server error",
+                title: errorMessage,
                 status: "error",
                 position: "bottom-right",
                 duration: 3000,
