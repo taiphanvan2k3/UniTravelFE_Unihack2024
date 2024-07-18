@@ -10,9 +10,10 @@ import DashBoardPage from "./pages/admin/dashboard";
 import UsersPage from "./pages/admin/users";
 import ReviewsPage from "./pages/reviews";
 import ForgotPassword from "./components/auth/ForgotPassword";
-import LocationPage from "./pages/admin/location";
 import Country from "./components/home/Country";
 import ProvincesPage from "./pages/home/provinces";
+import ProvinceDetailPage from "./pages/home/provinces/provinces-detail";
+import LocationPage from "./pages/home/location";
 
 export default function App() {
     return (
@@ -23,6 +24,8 @@ export default function App() {
                     <Route path="booking" element={<HomePage />} />
                     <Route path="reviews" element={<ReviewsPage />} />
                     <Route path="provinces" element={<ProvincesPage />} />
+                    <Route path="provinces/:code" element={<ProvinceDetailPage />} />
+                    <Route path="provinces/:code/location/" element={<LocationPage />} />
                     <Route path="auth" element={<AuthLayout />}>
                         <Route index element={<Navigate to="/auth/sign-in" />} />
                         <Route path="sign-in" element={<SignInPage />} />

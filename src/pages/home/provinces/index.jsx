@@ -1,30 +1,27 @@
-import ProvinceItem from "@/components/home/ProvinceItem";
-import { Box, Container, Flex, GridItem, Input, SimpleGrid } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import ProvinceItem from "@/components/home/Provinces/ProvinceItem";
+import { LoadingContext } from "@/contexts/LoadingContext";
+import { callAPI } from "@/services/api.service";
+import { Box, Flex, GridItem, Input, SimpleGrid } from "@chakra-ui/react";
+import { useContext, useEffect, useState } from "react";
 
 function ProvincesPage() {
     const [provinces, setProvinces] = useState([]);
+    const { setLoading } = useContext(LoadingContext);
     useEffect(() => {
         const fetchProvinces = async () => {
             try {
-                const response = await fetch(
-                    `${import.meta.env.VITE_SERVER_BASE_URL}${import.meta.env.VITE_PROVINCES_URL}`,
-                    {
-                        method: "GET",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                    }
+                const url = `${import.meta.env.VITE_PROVINCES_URL}`;
+                const responseData = await callAPI(url, "GET", null, {}, setLoading);
+                const sortedData = responseData.sort((a, b) =>
+                    a.name.localeCompare(b.name, "vi", { sensitivity: "base" })
                 );
-                const data = await response.json();
-                const sortedData = data.sort((a, b) => a.name.localeCompare(b.name, "vi", { sensitivity: "base" }));
                 setProvinces(sortedData);
             } catch (error) {
                 console.log(error);
             }
         };
         fetchProvinces();
-    }, []);
+    }, [setLoading]);
     return (
         <div className="w-full min-h-screen p-10">
             <Flex width={"100%"} justifyContent={"start"} gap={20} alignItems={"center"}>
@@ -38,10 +35,11 @@ function ProvincesPage() {
                     />
                 </Box>
             </Flex>
+
             <SimpleGrid columns={[1, null, 4]} spacing="20px" marginTop={"30px"}>
                 {provinces.map((item, index) => (
                     <GridItem key={index} height={"300px"}>
-                        <ProvinceItem title={item.name} />
+                        <ProvinceItem title={item.name} code={item.code} />
                     </GridItem>
                 ))}
             </SimpleGrid>

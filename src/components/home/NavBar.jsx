@@ -6,11 +6,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { useContext } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
-import ROUTE_CONSTANTS from "@/constants/routes";
+import { ROUTE_CONSTANTS } from "@/constants/routes";
 import UserDropdown from "./UserDropdown";
 
 function NavBar() {
-    console.log("Navbar re-render");
     const { auth } = useContext(AuthContext);
     const pages = [
         { title: "Home", path: ROUTE_CONSTANTS.HOME_PAGE },

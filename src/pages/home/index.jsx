@@ -1,56 +1,71 @@
 import Hero from "@/components/home/Hero";
-import { Card, CardBody, Flex, Image, Container, Text, Center, SimpleGrid, Stack } from "@chakra-ui/react";
+import { Flex, Image, Container, Text, Center, SimpleGrid, Stack, GridItem } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { japan, chinese, korea, vietnam } from "@/assets/images";
-import { faArrowRightLong, faArrowUp, faLocationDot, faStar } from "@fortawesome/free-solid-svg-icons";
+import { faArrowRightLong } from "@fortawesome/free-solid-svg-icons";
+import { useContext, useEffect, useState } from "react";
+import { callAPI } from "@/services/api.service";
+import { LoadingContext } from "@/contexts/LoadingContext";
+import { formatPrice } from "@/utils";
 function HomePage() {
-    console.log("Home Page re-render");
-    const destination = [
-        {
-            image: japan,
-            title: "Japan",
-            price: "299",
-            days: "7 days trip",
-        },
-        {
-            image: chinese,
-            title: "China",
-            price: "299",
-
-            days: "7 days trip",
-        },
-        {
-            image: korea,
-            title: "Korea",
-            price: "299",
-
-            days: "7 days trip",
-        },
-        {
-            image: vietnam,
-            title: "Vietnam",
-            price: "299",
-
-            days: "7 days trip",
-        },
-    ];
+    const [topLocation, setTopLocation] = useState([]);
+    const { setLoading } = useContext(LoadingContext);
+    useEffect(() => {
+        const fetchData = async () => {
+            const url = `${import.meta.env.VITE_PROVINCES_EXPERIENCE_LOCATIONS}/top?limit=10`;
+            const responseData = await callAPI(url, "GET", null, {}, setLoading);
+            setTopLocation(responseData);
+        };
+        fetchData();
+    }, [setLoading]);
     return (
         <div>
             <Hero />
             <Container justifyContent={"center"} marginTop={"20px"} marginBottom={"20px"}>
                 <Center>
                     <Text fontSize={"3xl"} fontWeight={"bold"}>
-                        Popular 
+                        Top 10 locations
                     </Text>
                 </Center>
             </Container>
             <div className="p-10">
-                <SimpleGrid columns={[2, null, 4]} spacing="20px">
-                   
+                <SimpleGrid columns={[1, 2, null, 5]} spacing="20px">
+                    {topLocation.map((item, index) => (
+                        <GridItem key={index} height={"full"}>
+                            <Container
+                                key={index}
+                                justifyContent={"center"}
+                                boxShadow={"lg"}
+                                borderRadius={"lg"}
+                                padding={"10px"}
+                                height={"350px"}
+                                className="hover:scale-105 duration-300 ease-in-out cursor-pointer"
+                            >
+                                <Stack>
+                                    <Image
+                                        borderRadius={"lg"}
+                                        height={"200px"}
+                                        width={"100%"}
+                                        src={item?.thumbnailUrl}
+                                    />
+                                    <Flex flexDirection={"column"} minHeight={"100px"} justifyContent={"space-between"}>
+                                        <Text fontWeight={"semibold"}>{item?.locationName}</Text>
+                                        <Flex marginTop={"10px"}>
+                                            <Text>
+                                                Discount Price :{" "}
+                                                <span className="font-bold text-white p-2 bg-sky-300 rounded-lg">
+                                                    {formatPrice(item.price.discountedPrice)}
+                                                </span>
+                                            </Text>
+                                        </Flex>
+                                    </Flex>
+                                </Stack>
+                            </Container>
+                        </GridItem>
+                    ))}
                 </SimpleGrid>
                 <Center margin={"30px"}>
                     <button className=" bg-white px-6 py-4 rounded-full text-sky-400 font-bold border-2 border-sky-400 duration-300 ease-in-out hover:bg-sky-300 hover:text-white">
-                        View All Country
+                        View All
                         <span className="ml-4 h-auto">
                             <FontAwesomeIcon icon={faArrowRightLong} />
                         </span>
@@ -59,35 +74,11 @@ function HomePage() {
                 <Flex marginTop={"20px"} marginBottom={"20px"} justifyContent={"space-between"}>
                     <Stack>
                         <Text fontWeight={"bold"} fontSize={"3xl"}>
-                            Popular Destination
+                            Popular Provinces
                         </Text>
-                        <Text fontSize={"md"}>Popular Destination in vietnamese</Text>
+                        <Text fontSize={"md"}>Popular provinces in vietnamese</Text>
                     </Stack>
                 </Flex>
-
-                <SimpleGrid columns={[1, null, 3]} spacing="30px">
-                    {destination.map((item, index) => (
-                        <div key={index} className="rounded-xl shadow-xl h-96">
-                            <Image src={item.image} className="w-full h-72 rounded-t-xl" />
-                            <Flex padding={"20px"} justifyContent={"space-between"}>
-                                <Stack>
-                                    <Text fontWeight={"bold"} fontSize={"lg"}>
-                                        {item.title}
-                                    </Text>
-                                    <Text fontSize={"md"} fontWeight={"bold"} textColor={"blue.400"}>
-                                        ${item.price}
-                                    </Text>
-                                </Stack>
-                                <Stack justifyContent={"end"}>
-                                    <Flex alignItems={"center"} gap={2}>
-                                        <FontAwesomeIcon icon={faArrowUp} />
-                                        <Text>{item.days}</Text>
-                                    </Flex>
-                                </Stack>
-                            </Flex>
-                        </div>
-                    ))}
-                </SimpleGrid>
             </div>
         </div>
     );
