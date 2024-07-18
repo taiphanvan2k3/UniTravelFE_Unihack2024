@@ -23,11 +23,18 @@ import useLocation from "@/hooks/useLocation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenNib, faStar } from "@fortawesome/free-solid-svg-icons";
 import { DefaultAvatar01 } from "@/assets/images";
-import { Fragment } from "react";
+import { Fragment, useContext } from "react";
 import Comment from "@/components/home/Comment";
 import { extractTextFromDescription } from "@/services/utils";
+import { AuthContext } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { ROUTE_CONSTANTS } from "@/constants/routes";
 
 function LocationPage() {
+    const { auth } = useContext(AuthContext);
+
+    const navigate = useNavigate();
+
     const { location } = useLocation();
     const { isOpen, onOpen, onClose } = useDisclosure();
     return (
@@ -67,7 +74,14 @@ function LocationPage() {
                             <Text fontWeight={"bold"} fontSize={"2xl"}>
                                 Bình luận, đánh giá
                             </Text>
-                            <IconButton onClick={onOpen}>
+                            <IconButton
+                                onClick={() => {
+                                    if (!auth.isAuthenticated) {
+                                        navigate(ROUTE_CONSTANTS.SIGN_IN_PAGE);
+                                    }
+                                    onOpen();
+                                }}
+                            >
                                 <FontAwesomeIcon icon={faPenNib} />
                             </IconButton>
                         </Flex>
