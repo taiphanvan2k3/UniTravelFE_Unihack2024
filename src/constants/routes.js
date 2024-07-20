@@ -6,6 +6,8 @@ const ROUTE_CONSTANTS = {
     REVIEWS_PAGE: "/reviews",
     BOOKING_PAGE: "/booking",
     PROVINCES_PAGE: "/provinces",
+    STORE_PAGE: "/store",
+    SCHEDULE_PAGE: "/schedule",
 };
 
 const API_ROUTES = {

@@ -16,6 +16,7 @@ import {
     ModalFooter,
     ModalHeader,
     ModalOverlay,
+    Stack,
     Text,
     useDisclosure,
 } from "@chakra-ui/react";
@@ -29,28 +30,36 @@ import { extractTextFromDescription } from "@/services/utils";
 import { AuthContext } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { ROUTE_CONSTANTS } from "@/constants/routes";
+import { tourGuider } from "@/data";
 
 function LocationPage() {
     const { auth } = useContext(AuthContext);
-
+    const roles = auth.user?.roles;
     const navigate = useNavigate();
-
     const { location } = useLocation();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    console.log(roles);
     return (
         <>
             <Grid templateColumns="repeat(12, 1fr)" gap={10} padding={"30px"}>
                 <GridItem rowSpan={1} colSpan={3}>
-                    <Image
-                        src={location.thumbnailUrl}
-                        height={"300px"}
-                        borderRadius={"lg"}
-                        boxShadow={"lg"}
-                        className="hover:scale-105 duration-300 ease-in-out"
-                    />
+                    <Stack alignItems={"center"}>
+                        <Image
+                            src={location.thumbnailUrl}
+                            height={"300px"}
+                            borderRadius={"lg"}
+                            boxShadow={"lg"}
+                            className="hover:scale-105 duration-300 ease-in-out"
+                        />
+                        {roles?.includes("tour-guider") && (
+                            <Button colorScheme="blue" className="hover:scale-105 duration-300 ease-in-out w-full mt-5">
+                                Đăng ký làm hướng dẫn viên
+                            </Button>
+                        )}
+                    </Stack>
                 </GridItem>
                 <GridItem colSpan={9}>
-                    <Flex justifyContent={"start"} alignItems={"center"}>
+                    <Flex justifyContent={"space-between"} alignItems={"center"}>
                         <Text fontWeight={"semibold"} fontSize={"2xl"}>
                             {location.locationName}
                         </Text>
@@ -69,47 +78,95 @@ function LocationPage() {
                     </Flex>
                 </GridItem>
                 <GridItem rowSpan={1} colSpan={12}>
-                    {Array.isArray(location.reviews) && location.reviews.length > 0 && (
-                        <Flex alignItems={"center"} gap={10}>
-                            <Text fontWeight={"bold"} fontSize={"2xl"}>
-                                Bình luận, đánh giá
-                            </Text>
-                            <IconButton
-                                onClick={() => {
-                                    if (!auth.isAuthenticated) {
-                                        navigate(ROUTE_CONSTANTS.SIGN_IN_PAGE);
-                                    }
-                                    onOpen();
-                                }}
-                            >
-                                <FontAwesomeIcon icon={faPenNib} />
-                            </IconButton>
-                        </Flex>
-                    )}
+                    <Stack>
+                        <Text fontWeight={"bold"} fontSize={"2xl"}>
+                            Top 5 tour guider
+                        </Text>
+                        <Grid templateColumns={"repeat(5, 1fr)"} gap={10} padding={"30px"}>
+                            {tourGuider.map((item, index) => (
+                                <GridItem
+                                    key={index}
+                                    colSpan={1}
+                                    boxShadow={"lg"}
+                                    borderRadius={"md"}
+                                    className="group"
+                                >
+                                    <Stack className="w-full h-full">
+                                        <div className="h-full group relative items-center justify-center overflow-hidden cursor-pointer hover:shadow-xl hover:shadow-black/40 transition-shadow rounded-md">
+                                            <div className="bg-sky-300 z-20 absolute inset-0 flex flex-col items-center justify-center px-9 text-center translate-y-full group-hover:translate-y-0 transition-all ease-in-out duration-500">
+                                                <Flex justifyContent={"space-between"} alignItems={"center"} gap={2}>
+                                                    <Text color={"black"} fontWeight={"bold"} fontSize={"lg"}>
+                                                        {item.rate}
+                                                    </Text>
+                                                    <FontAwesomeIcon className="text-yellow-400" icon={faStar} />
+                                                </Flex>
+                                            </div>
+                                            <Image src={item.avatar} className="rounded-t-md" />
+                                            <Flex
+                                                padding={"10px"}
+                                                justifyContent={"space-between"}
+                                                alignItems={"center"}
+                                            >
+                                                <Text fontWeight={"bold"} fontSize={"md"}>
+                                                    {item.name}
+                                                </Text>
+                                                <Button variant={"outline"} colorScheme={"blue"}>
+                                                    Contact
+                                                </Button>
+                                            </Flex>
+                                        </div>
+                                    </Stack>
+                                </GridItem>
+                            ))}
+                        </Grid>
+                    </Stack>
                 </GridItem>
-                <GridItem rowSpan={8} colSpan={12} boxShadow={"xl"} borderRadius={"lg"}>
-                    {location.reviews?.map(
-                        (item, index) =>
-                            item.reviewerName !== "-" && (
-                                <Fragment key={index}>
-                                    <Comment
-                                        avatar={DefaultAvatar01}
-                                        reviewerName={item.reviewerName}
-                                        score={item.score}
-                                        reviewText={item.reviewText}
-                                        reviewPhotos={item.reviewPhotos}
-                                    />
-                                    <Divider
-                                        height={"1px"}
-                                        width={"100%"}
-                                        bg="gray.200"
-                                        marginTop={"10px"}
-                                        marginBottom={"10px"}
-                                    />
-                                </Fragment>
-                            )
-                    )}
-                </GridItem>
+                {!roles?.includes("tour guider") && (
+                    <GridItem rowSpan={1} colSpan={12}>
+                        {Array.isArray(location.reviews) && location.reviews.length > 0 && (
+                            <Flex alignItems={"center"} gap={10}>
+                                <Text fontWeight={"bold"} fontSize={"2xl"}>
+                                    Bình luận, đánh giá
+                                </Text>
+                                <IconButton
+                                    onClick={() => {
+                                        if (!auth.isAuthenticated) {
+                                            navigate(ROUTE_CONSTANTS.SIGN_IN_PAGE);
+                                        }
+                                        onOpen();
+                                    }}
+                                >
+                                    <FontAwesomeIcon icon={faPenNib} />
+                                </IconButton>
+                            </Flex>
+                        )}
+                    </GridItem>
+                )}
+                {!roles?.includes("tour guider") && (
+                    <GridItem rowSpan={8} colSpan={12} boxShadow={"xl"} borderRadius={"lg"}>
+                        {location.reviews?.map(
+                            (item, index) =>
+                                item.reviewerName !== "-" && (
+                                    <Fragment key={index}>
+                                        <Comment
+                                            avatar={DefaultAvatar01}
+                                            reviewerName={item.reviewerName}
+                                            score={item.score}
+                                            reviewText={item.reviewText}
+                                            reviewPhotos={item.reviewPhotos}
+                                        />
+                                        <Divider
+                                            height={"1px"}
+                                            width={"100%"}
+                                            bg="gray.200"
+                                            marginTop={"10px"}
+                                            marginBottom={"10px"}
+                                        />
+                                    </Fragment>
+                                )
+                        )}
+                    </GridItem>
+                )}
             </Grid>
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />

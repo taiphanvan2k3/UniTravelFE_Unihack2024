@@ -11,7 +11,6 @@ const AuthProvider = ({ children }) => {
         user: null,
         token: null,
     });
-
     const verifyToken = async () => {
         try {
             const response = await callAPI(API_ROUTES.VERIFY_TOKEN, "POST");

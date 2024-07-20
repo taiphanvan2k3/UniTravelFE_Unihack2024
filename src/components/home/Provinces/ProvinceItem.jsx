@@ -2,7 +2,7 @@ import { Flex, Image, Stack, Text } from "@chakra-ui/react";
 import { vietnam } from "@/assets/images";
 import { Link } from "react-router-dom";
 // eslint-disable-next-line react/prop-types
-function ProvinceItem({ code, title }) {
+function ProvinceItem({ code, title, thumbnailUrl }) {
     return (
         <Link to={`/provinces/${code}`}>
             <Stack
@@ -15,9 +15,9 @@ function ProvinceItem({ code, title }) {
                 padding={"20px"}
                 cursor={"pointer"}
             >
-                <Image src={vietnam} width={"100%"} height={"100%"} borderRadius={"lg"} />
+                <Image src={thumbnailUrl} width={"100%"} height={"90%"} borderRadius={"lg"} />
                 <Flex>
-                    <Text fontWeight={"semibold"} className="text-lg" marginTop={"10px"}>
+                    <Text fontWeight={"semibold"} className="text-lg" marginTop={"5px"}>
                         {title}
                     </Text>
                 </Flex>

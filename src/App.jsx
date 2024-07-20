@@ -14,6 +14,8 @@ import Country from "./components/home/Country";
 import ProvincesPage from "./pages/home/provinces";
 import ProvinceDetailPage from "./pages/home/provinces/provinces-detail";
 import LocationPage from "./pages/home/location";
+import StorePage from "./pages/store";
+import SchedulePage from "./pages/home/schedule";
 
 export default function App() {
     return (
@@ -26,6 +28,8 @@ export default function App() {
                     <Route path="provinces" element={<ProvincesPage />} />
                     <Route path="provinces/:code" element={<ProvinceDetailPage />} />
                     <Route path="provinces/:code/location/" element={<LocationPage />} />
+                    <Route path="/schedule" element={<SchedulePage />} />
+                    <Route path="/store" element={<StorePage />} />
                     <Route path="auth" element={<AuthLayout />}>
                         <Route index element={<Navigate to="/auth/sign-in" />} />
                         <Route path="sign-in" element={<SignInPage />} />

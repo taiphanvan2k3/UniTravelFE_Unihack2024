@@ -4,27 +4,35 @@ import NavItem from "./NavItem";
 import { logo } from "@/assets/images";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/contexts/AuthContext";
 import { ROUTE_CONSTANTS } from "@/constants/routes";
 import UserDropdown from "./UserDropdown";
-
+const travelPages = [
+    { title: "Home", path: ROUTE_CONSTANTS.HOME_PAGE },
+    { title: "Provinces", path: ROUTE_CONSTANTS.PROVINCES_PAGE },
+    { title: "Bookings", path: ROUTE_CONSTANTS.BOOKING_PAGE },
+    { title: "Reviews", path: ROUTE_CONSTANTS.REVIEWS_PAGE },
+    { title: "Schedule", path: ROUTE_CONSTANTS.SCHEDULE_PAGE },
+];
+const storeOwnerPages = [
+    { title: "Home", path: ROUTE_CONSTANTS.HOME_PAGE },
+    { title: "Store", path: ROUTE_CONSTANTS.STORE_PAGE },
+];
 function NavBar() {
     const { auth } = useContext(AuthContext);
-    const pages = [
-        { title: "Home", path: ROUTE_CONSTANTS.HOME_PAGE },
-        { title: "Provinces", path: ROUTE_CONSTANTS.PROVINCES_PAGE },
-        { title: "Bookings", path: ROUTE_CONSTANTS.BOOKING_PAGE },
-        { title: "Reviews", path: ROUTE_CONSTANTS.REVIEWS_PAGE },
-        {
-            title: "Supports",
-            children: [
-                { title: "Schedule", path: "/schedule" },
-                { title: "Find Partners", path: "/find-partners" },
-            ],
-        },
-    ];
+    const [pages, setPages] = useState(travelPages);
+    useEffect(() => {
+        if (auth?.user?.roles && auth.user.roles.includes("store-owner")) {
+            setPages(storeOwnerPages);
+        } else {
+            setPages(travelPages);
+        }
+    }, [auth?.user?.roles]);
 
+    // if (auth.user.roles.includes("ROLE_ADMIN")) {
+    //     setPages(storeOwnerPages);
+    // }
     return (
         <nav className="w-full px-8 py-2">
             <div className="flex justify-around items-center">
