@@ -48,6 +48,7 @@ function SignIn() {
                     ...responseInfo.user,
                     displayName: responseInfo.user.displayName ?? responseInfo.user.email.split("@")[0],
                 },
+                token: responseInfo.token,
             });
 
             toast({
@@ -108,7 +109,10 @@ function SignIn() {
                         <Button type="submit">Sign In</Button>
                         <div className="flex justify-center items-center gap-2 mt-4">
                             <p className="text-black ">Do not have account? </p>
-                            <Link to={ROUTE_CONSTANTS.SIGN_UP_PAGE} className="hover:underline font-bold">
+                            <Link
+                                to={ROUTE_CONSTANTS.SIGN_UP_PAGE}
+                                className="hover:underline font-bold text-primary-100"
+                            >
                                 Sign Up
                             </Link>
                         </div>

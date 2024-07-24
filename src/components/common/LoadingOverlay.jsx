@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { Loading } from "@/assets/images";
 import { LoadingContext } from "@/contexts/LoadingContext";
 

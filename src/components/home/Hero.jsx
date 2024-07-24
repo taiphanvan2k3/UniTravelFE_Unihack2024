@@ -7,7 +7,7 @@ function Hero() {
             <div className="p-10 w-full h-full bg-white rounded-2xl shadow-2xl grid grid-cols-2">
                 <div className="col-span-1 flex flex-col ml-10">
                     <div className="">
-                        <p className="text-lg font-bold">
+                        <p className="text-lg font-bold text-primary-100 font-poppins">
                             Savor life is richness, explore widely{" "}
                             <span className="text-slate-400 font-semibold">
                                 {" "}
@@ -15,8 +15,8 @@ function Hero() {
                             </span>
                         </p>
                     </div>
-                    <h1 className="text-6xl font-bold mt-12 text-sky-400">Explore the world</h1>
-                    <div className="h-28 w-[700px] bg-sky-400 mt-10 rounded-full grid grid-cols-9 p-6">
+                    <h1 className="text-6xl font-bold mt-12 text-primary-200 font-poppins">Explore the world</h1>
+                    <div className="h-28 w-[700px] bg-primary-200 mt-10 rounded-full grid grid-cols-9 p-6">
                         <div className="col-span-3 flex flex-col justify-center">
                             <h3 className="font-bold text-white">Where</h3>
                             <p className="text-white font-semibold">

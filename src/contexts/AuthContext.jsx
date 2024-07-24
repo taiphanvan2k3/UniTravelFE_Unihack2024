@@ -5,16 +5,15 @@ import { API_ROUTES } from "@/constants/routes";
 
 const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
-    console.log("AuthProvider re-render");
     const [auth, setAuth] = useState({
         isAuthenticated: false,
         user: null,
         token: null,
     });
-
     const verifyToken = async () => {
         try {
             const response = await callAPI(API_ROUTES.VERIFY_TOKEN, "POST");
+            console.log(response);
             setAuth({
                 isAuthenticated: true,
                 user: response.user,

@@ -4,7 +4,7 @@ function Button({ children, type, styles }) {
         <button
             type={type}
             style={styles}
-            className={`w-full bg-black text-white p-2 rounded-md font-bold hover:bg-transparent hover:text-black border-2 border-black duration-300 ease-in-out`}
+            className={`w-full bg-primary-100 text-white p-2 rounded-md font-bold hover:bg-transparent hover:text-primary-100 border-2 border-primary-100 duration-300 ease-in-out`}
         >
             {children}
         </button>

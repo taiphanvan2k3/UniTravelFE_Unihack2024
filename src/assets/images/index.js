@@ -8,12 +8,25 @@ import Bana from "./bana.jpg";
 import japan from "./japan.jpg";
 import chinese from "./chinese.jpg";
 import korea from "./korea.png";
-import vietnam from "./image_5.jpg";
 import avatar from "./avatar.jpg";
 import DefaultAvatar01 from "./default_avatars/avatar01.jpg";
 import Loading from "./loading.gif";
-
+import vietnam from "./vietnam.jpg";
+import store_1 from "./store/store_1.png";
+import store from "./store/store.png";
+import shop from "./store/shops.png";
+import food from "./food/food.jpg";
+import food_1 from "./food/food_1.jpg";
+import food_2 from "./food/food_2.jpg";
+import food_3 from "./food/food_3.jpg";
 export {
+    food,
+    food_1,
+    food_2,
+    food_3,
+    store_1,
+    shop,
+    store,
     HoiAn,
     logo,
     logo_1,
@@ -24,8 +37,8 @@ export {
     japan,
     chinese,
     korea,
-    vietnam,
     avatar,
     DefaultAvatar01,
     Loading,
+    vietnam,
 };

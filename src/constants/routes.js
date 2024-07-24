@@ -5,6 +5,9 @@ const ROUTE_CONSTANTS = {
     SIGN_UP_PAGE: "/auth/sign-up",
     REVIEWS_PAGE: "/reviews",
     BOOKING_PAGE: "/booking",
+    PROVINCES_PAGE: "/provinces",
+    STORE_PAGE: "/store",
+    SCHEDULE_PAGE: "/schedule",
 };
 
 const API_ROUTES = {
