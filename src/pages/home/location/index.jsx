@@ -1,4 +1,5 @@
 import {
+    Box,
     Button,
     Divider,
     Flex,
@@ -38,7 +39,6 @@ function LocationPage() {
     const navigate = useNavigate();
     const { location } = useLocation();
     const { isOpen, onOpen, onClose } = useDisclosure();
-    console.log(roles);
     return (
         <>
             <Grid templateColumns="repeat(12, 1fr)" gap={10} padding={"30px"}>
@@ -46,7 +46,7 @@ function LocationPage() {
                     <Stack alignItems={"center"}>
                         <Image
                             src={location.thumbnailUrl}
-                            height={"300px"}
+                            height={"320px"}
                             borderRadius={"lg"}
                             boxShadow={"lg"}
                             className="hover:scale-105 duration-300 ease-in-out"
@@ -60,21 +60,27 @@ function LocationPage() {
                 </GridItem>
                 <GridItem colSpan={9}>
                     <Flex justifyContent={"space-between"} alignItems={"center"}>
-                        <Text fontWeight={"semibold"} fontSize={"2xl"}>
+                        <Text fontWeight={"semibold"} fontSize={"2xl"} className="font-roboto">
                             {location.locationName}
                         </Text>
                     </Flex>
                     <Flex alignContent={"end"} gap={2}>
-                        <Text fontWeight={"semibold"}>Đánh giá: </Text>
+                        <Text fontWeight={"semibold"} className="font-roboto">
+                            Đánh giá:{" "}
+                        </Text>
                         <Text>{location.score}</Text>
                         <FontAwesomeIcon icon={faStar} className="text-yellow-400 size-6" />
                     </Flex>
                     <Flex alignContent={"end"} gap={2}>
-                        <Text fontWeight={"semibold"}>Địa chỉ: </Text>
-                        <Text>{location.address}</Text>
+                        <Text fontWeight={"semibold"} className="font-roboto">
+                            Địa chỉ:{" "}
+                        </Text>
+                        <Text className="font-roboto">{location.address}</Text>
                     </Flex>
                     <Flex alignContent={"end"} gap={2} marginTop={"15px"}>
-                        <Text textAlign={"justify"}>{extractTextFromDescription(location.description)}</Text>
+                        <Text textAlign={"justify"} className="font-roboto">
+                            {extractTextFromDescription(location.description)}
+                        </Text>
                     </Flex>
                 </GridItem>
                 <GridItem rowSpan={1} colSpan={12}>
@@ -93,23 +99,24 @@ function LocationPage() {
                                 >
                                     <Stack className="w-full h-full">
                                         <div className="h-full group relative items-center justify-center overflow-hidden cursor-pointer hover:shadow-xl hover:shadow-black/40 transition-shadow rounded-md">
-                                            <div className="bg-sky-300 z-20 absolute inset-0 flex flex-col items-center justify-center px-9 text-center translate-y-full group-hover:translate-y-0 transition-all ease-in-out duration-500">
-                                                <Flex justifyContent={"space-between"} alignItems={"center"} gap={2}>
-                                                    <Text color={"black"} fontWeight={"bold"} fontSize={"lg"}>
-                                                        {item.rate}
-                                                    </Text>
-                                                    <FontAwesomeIcon className="text-yellow-400" icon={faStar} />
-                                                </Flex>
-                                            </div>
                                             <Image src={item.avatar} className="rounded-t-md" />
                                             <Flex
                                                 padding={"10px"}
                                                 justifyContent={"space-between"}
                                                 alignItems={"center"}
                                             >
-                                                <Text fontWeight={"bold"} fontSize={"md"}>
-                                                    {item.name}
-                                                </Text>
+                                                <Stack>
+                                                    <Text fontWeight={"bold"} fontSize={"md"}>
+                                                        {item.name}
+                                                    </Text>
+                                                    <Flex alignItems={"center"} gap={2}>
+                                                        <Text>{item.rate}</Text>
+                                                        <FontAwesomeIcon
+                                                            icon={faStar}
+                                                            className="text-yellow-400 size-4"
+                                                        />
+                                                    </Flex>
+                                                </Stack>
                                                 <Button variant={"outline"} colorScheme={"blue"}>
                                                     Contact
                                                 </Button>

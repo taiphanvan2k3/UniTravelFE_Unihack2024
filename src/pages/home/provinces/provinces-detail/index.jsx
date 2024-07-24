@@ -13,7 +13,7 @@ function ProvinceDetailPage() {
         <>
             <Grid
                 templateColumns={["repeat(1, 1fr)", "repeat(2, 1fr)", "repeat(3, 1fr)", "repeat(4, 1fr)"]}
-                gap={6}
+                gap={16}
                 padding={"10px"}
             >
                 {location?.map((item, index) => (
@@ -27,17 +27,19 @@ function ProvinceDetailPage() {
                         boxShadow={"lg"}
                         borderRadius={"lg"}
                         padding={"10px"}
-                        height={"350px"}
-                        className="hover:scale-105 duration-300 ease-in-out cursor-pointer"
+                        height={"400px"}
+                        className="hover:scale-105 duration-300 ease-in-out cursor-pointer bg-secondary"
                     >
                         <Stack>
-                            <Image borderRadius={"lg"} height={"200px"} width={"100%"} src={item?.thumbnailUrl} />
-                            <Flex flexDirection={"column"} minHeight={"100px"} justifyContent={"space-between"}>
-                                <Text fontWeight={"semibold"}>{item?.locationName}</Text>
-                                <Flex marginTop={"10px"}>
-                                    <Text>
+                            <Image borderRadius={"lg"} height={"250px"} width={"100%"} src={item?.thumbnailUrl} />
+                            <Flex flexDirection={"column"} minHeight={"100px"} justifyContent={"space-around"}>
+                                <Text fontWeight={"semibold"} fontFamily={"roboto"} className="text-black">
+                                    {item?.locationName}
+                                </Text>
+                                <Flex marginTop={"4px"}>
+                                    <Text className="font-roboto font-medium text-black">
                                         Discount Price :{" "}
-                                        <span className="font-bold text-white p-2 bg-sky-300 rounded-lg">
+                                        <span className="font-bold text-white p-2 bg-primary-100 rounded-lg">
                                             {formatPrice(item.price.discountedPrice)}
                                         </span>
                                     </Text>

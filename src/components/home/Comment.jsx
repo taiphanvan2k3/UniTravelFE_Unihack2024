@@ -23,7 +23,9 @@ function Comment({ avatar, reviewerName, score, reviewText, reviewPhotos }) {
                                 <FontAwesomeIcon icon={faStar} className="text-yellow-400 size-6" />
                             </Flex>
                         </Flex>
-                        <Text textAlign={"justify"}>{reviewText}</Text>
+                        <Text textAlign={"justify"} className="font-roboto">
+                            {reviewText}
+                        </Text>
                     </Stack>
                     <Flex gap={4} marginLeft={"10px"}>
                         {reviewPhotos &&

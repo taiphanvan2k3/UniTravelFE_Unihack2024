@@ -9,7 +9,7 @@ function Footer() {
     return (
         <footer className="w-full bg-black text-white mt-10 p-12 grid grid-cols-4 ">
             <div className={"col-span-1"}>
-                <div className={"flex flex-col gap-6 items-center justify-center"}>
+                <div className={"flex flex-col gap-6 items-start"}>
                     <div>
                         <h1 className="text-2xl font-bold">Let's have a trip</h1>
                         <p className="text-md text-slate-400">Welcome to our website</p>
@@ -22,7 +22,7 @@ function Footer() {
                     </div>
                 </div>
             </div>
-            <div className="col-span-3 flex justify-evenly ">
+            <div className="col-span-3 flex justify-between ">
                 <div className="flex flex-col  gap-4">
                     <h1>Company</h1>
                     <div className="flex flex-col gap-2">
@@ -43,7 +43,7 @@ function Footer() {
                         ))}
                     </div>
                 </div>
-                <div className="flex flex-col  gap-4">
+                <div className="flex flex-col gap-4">
                     <h1>Contact</h1>
                     <div className="flex flex-col gap-2">
                         <div className="flex gap-2 items-center ">

@@ -16,35 +16,41 @@ import ProvinceDetailPage from "./pages/home/provinces/provinces-detail";
 import LocationPage from "./pages/home/location";
 import StorePage from "./pages/store";
 import SchedulePage from "./pages/home/schedule";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
+const queryClient = new QueryClient();
 export default function App() {
     return (
-        <Router>
-            <Routes>
-                <Route path="/" element={<HomeLayout />}>
-                    <Route index element={<HomePage />} />
-                    <Route path="booking" element={<HomePage />} />
-                    <Route path="reviews" element={<ReviewsPage />} />
-                    <Route path="provinces" element={<ProvincesPage />} />
-                    <Route path="provinces/:code" element={<ProvinceDetailPage />} />
-                    <Route path="provinces/:code/location/" element={<LocationPage />} />
-                    <Route path="/schedule" element={<SchedulePage />} />
-                    <Route path="/store" element={<StorePage />} />
-                    <Route path="auth" element={<AuthLayout />}>
-                        <Route index element={<Navigate to="/auth/sign-in" />} />
-                        <Route path="sign-in" element={<SignInPage />} />
-                        <Route path="sign-up" element={<SignUpPage />} />
-                        <Route path="forgot-password" element={<ForgotPassword />} />
+        <QueryClientProvider client={queryClient}>
+            <Router>
+                <Routes>
+                    <Route path="/" element={<HomeLayout />}>
+                        <Route index element={<HomePage />} />
+                        <Route path="booking" element={<HomePage />} />
+                        <Route path="reviews" element={<ReviewsPage />} />
+                        <Route path="provinces" element={<ProvincesPage />} />
+                        <Route path="provinces/:code" element={<ProvinceDetailPage />} />
+                        <Route path="provinces/:code/location/" element={<LocationPage />} />
+                        <Route path="/schedule" element={<SchedulePage />} />
+                        <Route path="/store" element={<StorePage />} />
+                        <Route path="auth" element={<AuthLayout />}>
+                            <Route index element={<Navigate to="/auth/sign-in" />} />
+                            <Route path="sign-in" element={<SignInPage />} />
+                            <Route path="sign-up" element={<SignUpPage />} />
+                            <Route path="forgot-password" element={<ForgotPassword />} />
+                        </Route>
+                        <Route path="/country/:countryId" element={<Country />} />
                     </Route>
-                    <Route path="/country/:countryId" element={<Country />} />
-                </Route>
-                <Route path="/admin" element={<AdminLayout />}>
-                    <Route index element={<AdminPage />} />
-                    <Route path="dashboard" element={<DashBoardPage />} />
-                    <Route path="users" element={<UsersPage />} />
-                    <Route path="location" element={<LocationPage />} />
-                </Route>
-            </Routes>
-        </Router>
+                    <Route path="/admin" element={<AdminLayout />}>
+                        <Route index element={<AdminPage />} />
+                        <Route path="dashboard" element={<DashBoardPage />} />
+                        <Route path="users" element={<UsersPage />} />
+                        <Route path="location" element={<LocationPage />} />
+                    </Route>
+                </Routes>
+            </Router>
+            <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
     );
 }

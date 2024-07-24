@@ -167,7 +167,10 @@ function SignUp() {
                             <br />
                             <div className="flex justify-center items-center gap-2 mt-4">
                                 <p className="text-black ">Already have account? </p>
-                                <Link to={ROUTE_CONSTANTS.SIGN_IN_PAGE} className="hover:underline font-bold">
+                                <Link
+                                    to={ROUTE_CONSTANTS.SIGN_IN_PAGE}
+                                    className="hover:underline font-bold text-primary-100"
+                                >
                                     Sign In
                                 </Link>
                             </div>

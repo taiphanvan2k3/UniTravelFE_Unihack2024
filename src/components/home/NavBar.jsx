@@ -60,7 +60,7 @@ function NavBar() {
                     ) : (
                         <Link
                             to="/auth/sign-in"
-                            className="bg-black text-white px-6 py-3 rounded-2xl border-2 border-black duration-300 ease-in-out font-semibold text-lg hover:bg-white hover:text-black"
+                            className="bg-primary-200 text-white px-6 py-3 rounded-2xl border-2 border-primary-200 duration-300 ease-in-out font-semibold text-lg hover:bg-white hover:text-primary-100"
                         >
                             Sign In
                             <FontAwesomeIcon className="ml-2" icon={faUser} />
