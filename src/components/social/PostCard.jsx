@@ -57,18 +57,18 @@ function PostCard({
             if (commentInput && commentInput.length > 0) {
                 const formData = new FormData();
                 formData.append("content", commentInput);
-                const imagesArray = Array.from(imagesFile);
-                const videosArray = Array.from(videosFile);
-                if (imagesArray.length > 0) {
-                    imagesArray.forEach((image) => {
-                        formData.append("images", image);
-                    });
-                }
-                if (videosArray.length > 0) {
-                    videosArray.forEach((video) => {
-                        formData.append("videos", video);
-                    });
-                }
+                // const imagesArray = Array.from(imagesFile);
+                // const videosArray = Array.from(videosFile);
+                // if (imagesArray.length > 0) {
+                //     imagesArray.forEach((image) => {
+                //         formData.append("images", image);
+                //     });
+                // }
+                // if (videosArray.length > 0) {
+                //     videosArray.forEach((video) => {
+                //         formData.append("videos", video);
+                //     });
+                // }
                 const res = await fetch(
                     `${import.meta.env.VITE_SERVER_BASE_URL}${import.meta.env.VITE_POSTS_URL}/${id}/add-comment`,
                     {
@@ -88,7 +88,7 @@ function PostCard({
         }
     };
     return (
-        <Container marginTop={5} boxShadow={"lg"} borderRadius={"lg"} maxW={"container.2xl"} padding={"30px"}>
+        <Container marginTop={5} boxShadow={"lg"} borderRadius={"lg"} maxW={"container.2xl"} padding={"50px 150px"}>
             <VisuallyHidden>
                 <Input multiple onChange={handleImageChange} ref={imageInputRef} type={"file"} name="image" />
             </VisuallyHidden>
@@ -104,7 +104,7 @@ function PostCard({
                         right={0}
                         width={"24px"}
                         borderRadius={"full"}
-                        src={author.badges[0].imageUrl}
+                        src={author.badges[0]?.imageUrl}
                     />
                 </Box>
                 <VStack alignItems={"start"} marginLeft={5}>

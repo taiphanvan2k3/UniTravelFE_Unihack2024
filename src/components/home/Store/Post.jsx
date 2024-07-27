@@ -2,17 +2,17 @@ import { Button, Container, Flex, IconButton, Image, Input, Text, VisuallyHidden
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment, faImage, faVideo } from "@fortawesome/free-solid-svg-icons";
 import { PropTypes } from "prop-types";
-import { useReducer, useRef, useState } from "react";
+import { useContext, useReducer, useRef, useState } from "react";
 import reducer from "@/utils/vote";
 import UpVoteIcon from "@/components/icons/UpVote";
 import DownVoteIcon from "@/components/icons/DownVote";
 import Comment from "./Comment";
-import Cookies from "js-cookie";
+import { AuthContext } from "@/contexts/AuthContext";
 function Post({ id, author, content, imageUrls, upvoteCount, comments, sampleComments }) {
-    const accessToken = Cookies.get("access_token");
+    const { auth } = useContext(AuthContext);
+    const [newComment, setNewComment] = useState();
     const imageInputRef = useRef(null);
     const videoInputRef = useRef(null);
-    const [newComment, setNewComment] = useState();
     const [imagesFile, setImagesFile] = useState([]);
     const [videosFile, setVideosFile] = useState([]);
     const handleImageChange = (event) => {
@@ -46,7 +46,7 @@ function Post({ id, author, content, imageUrls, upvoteCount, comments, sampleCom
                 {
                     method: "POST",
                     headers: {
-                        Authorization: `Bearer ${accessToken}`,
+                        Authorization: `Bearer ${auth.token}`,
                     },
                     body: formData,
                 }

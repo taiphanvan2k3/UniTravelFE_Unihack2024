@@ -1,6 +1,6 @@
 import { getProvincesName } from "@/utils";
 import { Flex, Grid, GridItem, Image, Stack, Text, VStack } from "@chakra-ui/react";
-import { faShop } from "@fortawesome/free-solid-svg-icons";
+import { faCity, faClock, faLocationDot, faShop } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { PropTypes } from "prop-types";
 import { useNavigate } from "react-router-dom";
@@ -47,22 +47,16 @@ function StoreCard({ detailAddress, openingHours, province, name, _id, thumbnail
                     className="bg-primary-500"
                     borderRadius={"lg"}
                 >
-                    <Flex justifyContent={"space-between"} marginBottom={3}>
-                        <Text fontWeight={"bold"} className="text-primary-100">
-                            Opening Hours
-                        </Text>
+                    <Flex justifyContent={"space-between"} marginBottom={3} alignItems={"center"}>
+                        <FontAwesomeIcon icon={faClock} />
                         <Text>{openingHours}</Text>
                     </Flex>
                     <Flex justifyContent={"space-between"} marginBottom={3}>
-                        <Text fontWeight={"bold"} className="text-primary-100">
-                            Province
-                        </Text>
+                        <FontAwesomeIcon icon={faCity} />
                         <Text>{provinceName}</Text>
                     </Flex>
                     <Flex justifyContent={"space-between"} marginBottom={3}>
-                        <Text fontWeight={"bold"} className="text-primary-100">
-                            Address
-                        </Text>
+                        <FontAwesomeIcon icon={faLocationDot} />
                         <Text>{detailAddress}</Text>
                     </Flex>
                 </GridItem>

@@ -20,41 +20,79 @@ import {
     Text,
     useDisclosure,
 } from "@chakra-ui/react";
-import useLocation from "@/hooks/useLocation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenNib, faStar } from "@fortawesome/free-solid-svg-icons";
 import { DefaultAvatar01 } from "@/assets/images";
-import { Fragment, useContext, useEffect } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import Comment from "@/components/home/Comment";
 import { extractTextFromDescription } from "@/services/utils";
 import { AuthContext } from "@/contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ROUTE_CONSTANTS } from "@/constants/routes";
-import { tourGuider } from "@/data";
+import Post from "@/components/home/Store/Post";
+import PostCard from "@/components/social/PostCard";
+import { useForm } from "react-hook-form";
 
 function LocationPage() {
     const { auth } = useContext(AuthContext);
+    const [location, setLocation] = useState({});
+    const [loading, setLoading] = useState(false);
     const roles = auth.user?.roles;
     const navigate = useNavigate();
-    const { location } = useLocation();
+    const { id } = useParams();
+
     useEffect(() => {
-        const fetchPosts = async () => {
+        const fetchLocations = async () => {
             try {
-                const url = `${import.meta.env.VITE_SERVER_BASE_URL}${import.meta.env.VITE_PROVINCES_EXPERIENCE_LOCATIONS}/${location.id}${import.meta.env.VITE_POSTS_URL}?pageIndex=1&pageSize=10`;
-                const result = await fetch(url);
-                console.log(await result.json());
+                const res = await fetch(
+                    `${import.meta.env.VITE_SERVER_BASE_URL}${import.meta.env.VITE_PROVINCES_EXPERIENCE_LOCATIONS}/get-detail/${id}`
+                );
+                const data = await res.json();
+                console.log(data);
+                setLocation(data);
             } catch (error) {
-                console.error(error);
+                throw new Error(error);
             }
         };
-        if (location.id) {
-            fetchPosts();
+        if (id) {
+            fetchLocations();
         }
-    }, [location.id]);
+    }, [id]);
+    const { register, handleSubmit } = useForm();
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const onSubmit = async (data) => {
+        const formData = new FormData();
+        formData.append("content", data.content);
+        formData.append("locationType", "experienceLocation");
+        const images = Array.from(data.images);
+        const videos = Array.from(data.videos);
+        if (images.length > 0) {
+            images.forEach((image) => {
+                formData.append("images", image);
+            });
+        }
+        if (videos.length > 0) {
+            videos.forEach((video) => {
+                formData.append("videos", video);
+            });
+        }
+        const url = `${import.meta.env.VITE_SERVER_BASE_URL}${import.meta.env.VITE_POSTS_URL}/${id}/create-post`;
+        console.log(formData);
+        const res = await fetch(url, {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${auth.token}`,
+            },
+            body: formData,
+        });
+        const dataRes = await res.json();
+        if (dataRes.status === "success") {
+            onClose();
+        }
+    };
     return (
         <>
-            <Grid templateColumns="repeat(12, 1fr)" gap={10} padding={"30px"}>
+            <Grid templateColumns="repeat(12, 1fr)" gap={10} paddingX={"100px"}>
                 <GridItem rowSpan={1} colSpan={3}>
                     <Stack alignItems={"center"}>
                         <Image
@@ -91,12 +129,12 @@ function LocationPage() {
                         <Text className="font-roboto">{location.address}</Text>
                     </Flex>
                     <Flex alignContent={"end"} gap={2} marginTop={"15px"}>
-                        <Text textAlign={"justify"} className="font-roboto">
+                        <Text textAlign={"justify"} className="font-jakarta">
                             {extractTextFromDescription(location.description)}
                         </Text>
                     </Flex>
                 </GridItem>
-                <GridItem rowSpan={1} colSpan={12}>
+                {/* <GridItem rowSpan={1} colSpan={12}>
                     <Stack>
                         <Text fontWeight={"bold"} fontSize={"2xl"}>
                             Top 5 tour guider
@@ -140,77 +178,65 @@ function LocationPage() {
                             ))}
                         </Grid>
                     </Stack>
-                </GridItem>
+                </GridItem> */}
+
                 {!roles?.includes("tour guider") && (
-                    <GridItem rowSpan={1} colSpan={12}>
-                        {Array.isArray(location.reviews) && location.reviews.length > 0 && (
+                    <>
+                        <GridItem rowSpan={1} colSpan={12}>
                             <Flex alignItems={"center"} gap={10}>
                                 <Text fontWeight={"bold"} fontSize={"2xl"}>
                                     Bình luận, đánh giá
                                 </Text>
                                 <IconButton
                                     onClick={() => {
-                                        if (!auth.isAuthenticated) {
-                                            navigate(ROUTE_CONSTANTS.SIGN_IN_PAGE);
-                                        }
                                         onOpen();
                                     }}
                                 >
                                     <FontAwesomeIcon icon={faPenNib} />
                                 </IconButton>
                             </Flex>
-                        )}
-                    </GridItem>
-                )}
-                {!roles?.includes("tour guider") && (
-                    <GridItem rowSpan={8} colSpan={12} boxShadow={"xl"} borderRadius={"lg"}>
-                        {location.reviews?.map(
-                            (item, index) =>
-                                item.reviewerName !== "-" && (
-                                    <Fragment key={index}>
-                                        <Comment
-                                            avatar={DefaultAvatar01}
-                                            reviewerName={item.reviewerName}
-                                            score={item.score}
-                                            reviewText={item.reviewText}
-                                            reviewPhotos={item.reviewPhotos}
-                                        />
-                                        <Divider
-                                            height={"1px"}
-                                            width={"100%"}
-                                            bg="gray.200"
-                                            marginTop={"10px"}
-                                            marginBottom={"10px"}
-                                        />
-                                    </Fragment>
-                                )
-                        )}
-                    </GridItem>
+                        </GridItem>
+                        <GridItem rowSpan={8} colSpan={12} borderRadius={"lg"}>
+                            {Array.isArray(location?.comments) && location.comments.length > 0 ? (
+                                location.comments.map((item, index) => <PostCard key={item.id} {...item} />)
+                            ) : (
+                                <Text>No comments</Text>
+                            )}
+                        </GridItem>
+                    </>
                 )}
             </Grid>
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
-                <ModalContent>
-                    <ModalHeader>Thêm bài đánh giá</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                        <FormControl>
-                            <FormLabel>Nội dung</FormLabel>
-                            <Input type="text" placeholder="Nhập nội dung bài đánh giá" />
-                        </FormControl>
-                        <FormControl>
-                            <FormLabel>Ảnh</FormLabel>
-                            <Input type="file" multiple />
-                        </FormControl>
-                    </ModalBody>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                    <ModalContent>
+                        <ModalHeader>Thêm bài đánh giá</ModalHeader>
+                        <ModalCloseButton />
+                        <ModalBody>
+                            <FormControl>
+                                <FormLabel>Nội dung</FormLabel>
+                                <Input {...register("content")} type="text" placeholder="Nhập nội dung bài đánh giá" />
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel>Ảnh</FormLabel>
+                                <Input {...register("images")} type="file" multiple />
+                            </FormControl>
+                            <FormControl>
+                                <FormLabel>Video</FormLabel>
+                                <Input {...register("videos")} type="file" multiple />
+                            </FormControl>
+                        </ModalBody>
 
-                    <ModalFooter>
-                        <Button mr={3} onClick={onClose}>
-                            Close
-                        </Button>
-                        <Button colorScheme="blue">Add</Button>
-                    </ModalFooter>
-                </ModalContent>
+                        <ModalFooter>
+                            <Button mr={3} onClick={onClose}>
+                                Close
+                            </Button>
+                            <Button colorScheme="blue" type="submit">
+                                Add
+                            </Button>
+                        </ModalFooter>
+                    </ModalContent>
+                </form>
             </Modal>
         </>
     );
