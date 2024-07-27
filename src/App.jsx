@@ -20,6 +20,8 @@ import NewFeedsPage from "./pages/social/new-feeds";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import LocationPage from "./pages/home/location";
 import FindStorePage from "./pages/home/find-store";
+import StorePage from "./pages/home/store";
+import StoreDetailPage from "./pages/home/store/store-detail";
 
 const queryClient = new QueryClient();
 export default function App() {
@@ -32,6 +34,8 @@ export default function App() {
                         <Route path="booking" element={<HomePage />} />
                         <Route path="reviews" element={<ReviewsPage />} />
                         <Route path="find-store" element={<FindStorePage />} />
+                        <Route path="store" element={<StorePage />} />
+                        <Route path="store/:id" element={<StoreDetailPage />} />
                         <Route path="provinces" element={<ProvincesPage />} />
                         <Route path="provinces/:code" element={<ProvinceDetailPage />} />
                         <Route path="location/:id" element={<LocationPage />} />

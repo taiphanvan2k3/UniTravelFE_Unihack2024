@@ -138,17 +138,19 @@ function Post({
                             ))}
                     </Flex>
                     <Flex alignItems={"center"} gap={4}>
-                        <Flex gap={2}>
-                            <UpVoteIcon
-                                onClick={() => dispatch({ type: "upvote" })}
-                                fill={state.isUpvoted ? "red" : null}
-                            />
-                            <Text>{state.votes}</Text>
-                            <DownVoteIcon
-                                onClick={() => dispatch({ type: "downvote" })}
-                                fill={state.isDownvoted ? "red" : null}
-                            />
-                        </Flex>
+                        {isCheckIn && (
+                            <Flex gap={2}>
+                                <UpVoteIcon
+                                    onClick={() => dispatch({ type: "upvote" })}
+                                    fill={state.isUpvoted ? "red" : null}
+                                />
+                                <Text>{state.votes}</Text>
+                                <DownVoteIcon
+                                    onClick={() => dispatch({ type: "downvote" })}
+                                    fill={state.isDownvoted ? "red" : null}
+                                />
+                            </Flex>
+                        )}
                         {isCheckIn && (
                             <Flex
                                 cursor={"pointer"}

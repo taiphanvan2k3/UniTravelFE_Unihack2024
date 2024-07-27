@@ -3,6 +3,7 @@ const env = import.meta.env;
 const baseUrl = `${env.VITE_SERVER_BASE_URL}`;
 const locationUrl = `${baseUrl}${env.VITE_PROVINCES_EXPERIENCE_LOCATIONS}`;
 const postsUrl = `${baseUrl}${env.VITE_POSTS_URL}`;
+const storeUrl = `${baseUrl}${env.VITE_STORES_URL}`;
 const locationPath = {
     getDetail: (id) => `${locationUrl}/get-detail/${id}`,
     getTop: (limit) => `${locationUrl}/top?limit=${limit}`,
@@ -14,7 +15,12 @@ const postFuncPath = {
     addReply: (postId, commentId) => `${postsUrl}/${postId}/${commentId}/add-reply`,
     getNewFeeds: () => `${postsUrl}/new-feeds`,
 };
-
+const storeFuncPath = {
+    getMyStores: () => `${storeUrl}/my-stores`,
+    getMyStoresById: (id) => `${storeUrl}/${id}`,
+    createStore: () => `${storeUrl}/create`,
+    getQrStore: (id) => `${storeUrl}/${id}/get-qr-code`,
+};
 const formatPrice = (price) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
@@ -60,4 +66,13 @@ const getNewComment = (user, data) => {
     };
     return newComment;
 };
-export { formatPrice, getProvinces, getNewComment, getNewPost, getProvincesName, locationPath, postFuncPath };
+export {
+    formatPrice,
+    storeFuncPath,
+    getProvinces,
+    getNewComment,
+    getNewPost,
+    getProvincesName,
+    locationPath,
+    postFuncPath,
+};

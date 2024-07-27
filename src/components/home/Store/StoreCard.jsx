@@ -4,7 +4,7 @@ import { faCity, faClock, faLocationDot, faShop } from "@fortawesome/free-solid-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { PropTypes } from "prop-types";
 import { useNavigate } from "react-router-dom";
-function StoreCard({ detailAddress, openingHours, province, name, _id, thumbnailUrl }) {
+function StoreCard({ detailAddress, openingHours, province, name, _id, thumbnailUrl, qrCodeUrl }) {
     const provinceName = getProvincesName(province);
     const navigate = useNavigate();
     return (
@@ -36,7 +36,7 @@ function StoreCard({ detailAddress, openingHours, province, name, _id, thumbnail
                         </Text>
                     </Stack>
                 </GridItem>
-                <GridItem colSpan={2} rowSpan={2} padding={2}>
+                <GridItem colSpan={2} rowSpan={2} paddingY={2}>
                     <Image width={"100%"} borderRadius={"lg"} height={"200px"} src={thumbnailUrl} />
                 </GridItem>
                 <GridItem
@@ -44,7 +44,7 @@ function StoreCard({ detailAddress, openingHours, province, name, _id, thumbnail
                     rowSpan={2}
                     width={"100%"}
                     padding={4}
-                    className="bg-primary-500"
+                    className="bg-gray-200"
                     borderRadius={"lg"}
                 >
                     <Flex justifyContent={"space-between"} marginBottom={3} alignItems={"center"}>
@@ -73,5 +73,6 @@ StoreCard.propTypes = {
     videoUrls: PropTypes.array,
     name: PropTypes.string,
     _id: PropTypes.string,
+    qrCodeUrl: PropTypes.string,
 };
 export default StoreCard;

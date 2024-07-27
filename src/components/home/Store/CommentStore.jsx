@@ -1,26 +1,23 @@
 import { Avatar, Button, Container, Flex, HStack, IconButton, Image, Input, Text, VStack } from "@chakra-ui/react";
-import UpVoteIcon from "../icons/UpVote";
-import DownVoteIcon from "../icons/DownVote";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowDown, faArrowUp, faImage, faReply, faVideo } from "@fortawesome/free-solid-svg-icons";
+import { faArrowDown, faArrowUp, faImage, faPaperPlane, faReply, faVideo } from "@fortawesome/free-solid-svg-icons";
 import { PropTypes } from "prop-types";
 import { useEffect, useState } from "react";
+import UpVoteIcon from "@/components/icons/UpVote";
+import DownVoteIcon from "@/components/icons/DownVote";
+import ReplyStore from "./ReplyStore";
 
-function Comment({ _id, isCheckIn, user, content, imageUrls, videoUrls, upvoteCount, replies }) {
+function CommentStore({ author, store, content, imageUrls, videoUrls, comments, upvoteCount, _id }) {
     const [showReply, setShowReply] = useState(false);
-    const [repliesData, setRepliesData] = useState();
     const [showInputCommnet, setShowInputComment] = useState(false);
-    useEffect(() => {
-        setRepliesData(replies);
-    }, [replies]);
     return (
         <Container maxW={"container.2xl"} padding={8}>
             <HStack alignItems={"flex-start"}>
-                <Avatar src={user.imageUrl} />
+                <Avatar src={author.imageUrl} />
                 <VStack alignItems={"flex-start"} marginLeft={3}>
                     <Flex gap={4} alignItems={"flex-start"}>
                         <Text fontWeight={"bold"} fontSize={"md"} className="text-primary-100 font-roboto">
-                            {user.displayName}
+                            {author.displayName}
                         </Text>
                         <Text fontSize={"sm"} color={"gray.500"}>
                             {content}
@@ -58,24 +55,20 @@ function Comment({ _id, isCheckIn, user, content, imageUrls, videoUrls, upvoteCo
                             ))}
                     </Flex>
                     <Flex alignItems={"center"} gap={4}>
-                        {isCheckIn && (
-                            <Flex gap={2}>
-                                <UpVoteIcon />
-                                <Text>{upvoteCount}</Text>
-                                <DownVoteIcon />
-                            </Flex>
-                        )}
-                        {isCheckIn && (
-                            <Flex
-                                alignItems={"center"}
-                                gap={2}
-                                cursor={"pointer"}
-                                onClick={() => setShowInputComment(!showInputCommnet)}
-                            >
-                                <FontAwesomeIcon icon={faReply} />
-                                <Text>Phản hồi</Text>
-                            </Flex>
-                        )}
+                        <Flex gap={2}>
+                            <UpVoteIcon />
+                            <Text>{upvoteCount}</Text>
+                            <DownVoteIcon />
+                        </Flex>
+                        <Flex
+                            alignItems={"center"}
+                            gap={2}
+                            cursor={"pointer"}
+                            onClick={() => setShowInputComment(!showInputCommnet)}
+                        >
+                            <FontAwesomeIcon icon={faReply} />
+                            <Text>Phản hồi</Text>
+                        </Flex>
                     </Flex>
                     {showInputCommnet && (
                         <Flex
@@ -94,15 +87,26 @@ function Comment({ _id, isCheckIn, user, content, imageUrls, videoUrls, upvoteCo
                                 _focusVisible={{ border: "none" }}
                             />
                             <Flex gap={3}>
-                                <IconButton icon={<FontAwesomeIcon icon={faImage} />} borderRadius={"full"} />
-                                <IconButton icon={<FontAwesomeIcon icon={faVideo} />} borderRadius={"full"} />
-                                <Button borderRadius={"full"} paddingX={8} colorScheme={"blue"}>
-                                    Lưu
-                                </Button>
+                                <IconButton
+                                    backgroundColor={"white"}
+                                    icon={<FontAwesomeIcon icon={faImage} />}
+                                    borderRadius={"full"}
+                                />
+                                <IconButton
+                                    backgroundColor={"white"}
+                                    icon={<FontAwesomeIcon icon={faVideo} />}
+                                    borderRadius={"full"}
+                                />
+                                <IconButton
+                                    icon={<FontAwesomeIcon icon={faPaperPlane} />}
+                                    borderRadius={"full"}
+                                    paddingX={8}
+                                    colorScheme={"blue"}
+                                />
                             </Flex>
                         </Flex>
                     )}
-                    {repliesData && repliesData.length > 0 && (
+                    {comments && comments.length > 0 && (
                         <Flex
                             onClick={() => setShowReply(!showReply)}
                             cursor={"pointer"}
@@ -112,28 +116,28 @@ function Comment({ _id, isCheckIn, user, content, imageUrls, videoUrls, upvoteCo
                         >
                             <Flex gap={2}>
                                 <Text>Hiển thị phản hồi</Text>
-                                <Text>({repliesData.length})</Text>
+                                <Text>({comments.length})</Text>
                             </Flex>
                             {showReply ? <FontAwesomeIcon icon={faArrowUp} /> : <FontAwesomeIcon icon={faArrowDown} />}
                         </Flex>
                     )}
                     {showReply &&
-                        repliesData &&
-                        repliesData.length > 0 &&
-                        repliesData.map((comment) => <Comment {...comment} key={comment._id} />)}
+                        comments &&
+                        comments.length > 0 &&
+                        comments.map((comment) => <ReplyStore {...comment} key={comment._id} />)}
                 </VStack>
             </HStack>
         </Container>
     );
 }
-Comment.propTypes = {
-    isCheckIn: PropTypes.bool,
-    _id: PropTypes.string.isRequired,
-    user: PropTypes.object.isRequired,
-    content: PropTypes.string.isRequired,
-    imageUrls: PropTypes.array.isRequired,
-    videoUrls: PropTypes.array.isRequired,
-    upvoteCount: PropTypes.number.isRequired,
-    replies: PropTypes.array.isRequired,
+CommentStore.propTypes = {
+    author: PropTypes.object,
+    store: PropTypes.object,
+    imageUrls: PropTypes.array,
+    videoUrls: PropTypes.array,
+    comments: PropTypes.array,
+    upvoteCount: PropTypes.number,
+    content: PropTypes.string,
+    _id: PropTypes.string,
 };
-export default Comment;
+export default CommentStore;
