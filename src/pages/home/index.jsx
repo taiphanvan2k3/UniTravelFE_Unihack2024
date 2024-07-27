@@ -1,7 +1,5 @@
 import Hero from "@/components/home/Hero";
 import { Flex, Image, Container, Text, Center, SimpleGrid, Stack, GridItem } from "@chakra-ui/react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRightLong } from "@fortawesome/free-solid-svg-icons";
 import { useContext, useEffect, useState } from "react";
 import { callAPI } from "@/services/api.service";
 import { LoadingContext } from "@/contexts/LoadingContext";

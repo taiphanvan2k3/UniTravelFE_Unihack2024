@@ -1,37 +1,31 @@
 import { createContext, useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { callAPI } from "@/services/api.service";
-import { API_ROUTES } from "@/constants/routes";
-
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
+    const accessToken = Cookies.get("access_token");
     const [auth, setAuth] = useState({
         isAuthenticated: false,
         user: null,
         token: null,
     });
-    const verifyToken = async () => {
-        try {
-            const response = await callAPI(API_ROUTES.VERIFY_TOKEN, "POST");
-            console.log(response);
+    useEffect(() => {
+        if (accessToken) {
+            const decodedToken = jwtDecode(accessToken);
             setAuth({
                 isAuthenticated: true,
-                user: response.user,
-                token: response.token,
+                user: decodedToken,
+                token: accessToken,
             });
-        } catch (error) {
+        } else {
             setAuth({
                 isAuthenticated: false,
                 user: null,
                 token: null,
             });
         }
-    };
-
-    useEffect(() => {
-        verifyToken();
-    }, []);
-
+    }, [accessToken]);
     return <AuthContext.Provider value={{ auth, setAuth }}>{children}</AuthContext.Provider>;
 };
 

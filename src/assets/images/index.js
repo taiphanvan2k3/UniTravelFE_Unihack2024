@@ -19,7 +19,11 @@ import food from "./food/food.jpg";
 import food_1 from "./food/food_1.jpg";
 import food_2 from "./food/food_2.jpg";
 import food_3 from "./food/food_3.jpg";
+import beach from "./beach.jpg";
+import beach_2 from "./beach_2.jpg";
 export {
+    beach,
+    beach_2,
     food,
     food_1,
     food_2,

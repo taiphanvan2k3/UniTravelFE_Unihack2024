@@ -46,10 +46,15 @@ function ProvincesPage() {
                 </Flex>
             </Flex>
 
-            <SimpleGrid columns={[1, null, 4]} spacing="20px" marginTop={"30px"}>
+            <SimpleGrid columns={[1, null, 3]} spacing="20px" marginTop={"30px"}>
                 {provincesData?.map((item, index) => (
                     <GridItem key={index} height={"300px"}>
-                        <ProvinceItem thumbnailUrl={item.thumbnailUrl} title={item.name} code={item.code} />
+                        <ProvinceItem
+                            description={item.desc}
+                            thumbnailUrl={item.thumbnailUrl}
+                            title={item.name}
+                            code={item.code}
+                        />
                     </GridItem>
                 ))}
             </SimpleGrid>

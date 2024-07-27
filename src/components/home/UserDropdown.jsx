@@ -1,16 +1,16 @@
 import { DefaultAvatar01 } from "@/assets/images";
 import PropTypes from "prop-types";
 import { useContext, useEffect, useRef, useState } from "react";
-import { callAPI } from "@/services/api.service";
-import { useToast } from "@chakra-ui/react";
+import { Avatar, Box, Flex, Image, Text, useToast, VStack } from "@chakra-ui/react";
 import { setCookie } from "@/services/utils";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "@/contexts/AuthContext";
 import { LoadingContext } from "@/contexts/LoadingContext";
-
+import Cookies from "js-cookie";
+import { faShareFromSquare, faSignOut, faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 const useOutsideClick = (handler) => {
     const ref = useRef();
-
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (ref.current && !ref.current.contains(event.target)) {
@@ -25,7 +25,16 @@ const useOutsideClick = (handler) => {
     }, [ref]);
     return ref;
 };
-
+const getRoleName = (roleName) => {
+    switch (roleName[0]) {
+        case "store-owner":
+            return "Store Owner";
+        case "traveler":
+            return "Traveler";
+        default:
+            return "Admin";
+    }
+};
 const UserDropdown = ({ userInfo }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useOutsideClick(() => setIsDropdownOpen(false));
@@ -36,15 +45,30 @@ const UserDropdown = ({ userInfo }) => {
 
     const handleLogout = async () => {
         try {
-            await callAPI("/auth/sign-out", "POST", { email: userInfo.email }, null, setLoading);
+            setLoading(true);
+            const res = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}${import.meta.env.VITE_SIGNOUT_URL}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${Cookies.get("access_token")}`,
+                },
+                body: JSON.stringify({ email: userInfo.email }),
+            });
+            if (!res.ok) {
+                throw new Error("Logout failed");
+            }
             setAuth({
                 isAuthenticated: false,
                 user: null,
                 token: null,
             });
+            console.log("Logout");
+            Cookies.remove("access_token"); // Replace 'access_token' with the name of the cookie you want to delete
             navigate("/");
             setCookie("redirect", "", 0);
+            setLoading(false);
         } catch (error) {
+            console.log(error);
             toast({
                 title: "Logout failed",
                 status: "error",
@@ -55,59 +79,77 @@ const UserDropdown = ({ userInfo }) => {
         }
     };
 
-    const handleShowProfile = () => {};
-
     return (
-        <div className="flex items-center gap-2">
-            <div className="relative">
-                <button onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-                    <img
-                        src={userInfo.avatar ?? DefaultAvatar01}
-                        alt="avatar"
-                        className="rounded-full w-[40px] h-[40px] cursor-pointer"
-                    />
-                </button>
+        <Box position={"relative"} zIndex={10} ref={dropdownRef}>
+            <Avatar cursor={"pointer"} onClick={() => setIsDropdownOpen(!isDropdownOpen)} src={DefaultAvatar01} />
+            {isDropdownOpen && (
+                <VStack
+                    zIndex={20}
+                    position={"absolute"}
+                    width={"300px"}
+                    top={"100%"}
+                    right={"80%"}
+                    ref={dropdownRef}
+                    boxShadow={"lg"}
+                    padding={6}
+                    rounded={"lg"}
+                    bg={"white"}
+                    className="cursor-pointer"
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                >
+                    <Flex alignItems={"center"} onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+                        <Image width={"50px"} height={"50px"} src={DefaultAvatar01} borderRadius={"full"} />
 
-                {isDropdownOpen && (
-                    <div
-                        className="absolute right-0 border border-solid border-[#d7d7d7] shadow-lg shadow-slate-400 min-w-[220px] max-w-[250px] z-[100] bg-[#fff] rounded pt-[5px]"
-                        ref={dropdownRef}
+                        <VStack alignItems={"flex-start"} marginLeft={"20px"}>
+                            <Text fontWeight={"bold"} fontSize={"md"} className="text-primary-100">
+                                {getRoleName(userInfo.roles)}
+                            </Text>
+                            <Text fontWeight={"bold"} textOverflow={"hidden"} fontSize={"xs"} className="text-gray-400">
+                                {userInfo.email}
+                            </Text>
+                        </VStack>
+                    </Flex>
+                    <Box marginTop={4} height={"2px"} width={"100%"} backgroundColor={"gray.200"}></Box>
+                    <Flex
+                        width={"100%"}
+                        justifyContent={"flex-start"}
+                        marginTop={2}
+                        alignItems={"center"}
+                        gap={4}
+                        paddingX={2}
                     >
-                        <div className="border-b-2 p-3 flex">
-                            <div className="shrink-0">
-                                <img
-                                    src={userInfo.avatar ?? DefaultAvatar01}
-                                    alt=""
-                                    className="rounded-full w-[40px] h-[40px] cursor-pointer"
-                                />
-                            </div>
-                            <div className="ml-[12px] max-w-[calc(100%-60px)]">
-                                <div className="font-medium text-[0.85rem]">{userInfo.displayName}</div>
-                                <div className="font-normal text-[0.8rem] overflow-hidden text-ellipsis whitespace-nowrap font-sans">
-                                    {userInfo.email}
-                                </div>
-                            </div>
-                        </div>
-                        <div></div>
-                        <div>
-                            <div className="p-2 pl-3 hover:bg-[#edeff4]">
-                                <button onClick={handleShowProfile} className="font-medium w-[100%] text-left">
-                                    <Link to="/profile">Your profile</Link>
-                                </button>
-                            </div>
-                            <div className="p-2 pl-3 hover:bg-[#edeff4]">
-                                <button
-                                    onClick={handleLogout}
-                                    className="font-medium w-[100%] text-left hover:bg-[#edeff4]"
-                                >
-                                    Log out
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )}
-            </div>
-        </div>
+                        <FontAwesomeIcon icon={faUser} />
+                        <Link>View Profile</Link>
+                    </Flex>
+                    <Link></Link>
+                    <Flex
+                        width={"100%"}
+                        justifyContent={"flex-start"}
+                        marginTop={2}
+                        alignItems={"center"}
+                        gap={4}
+                        paddingX={2}
+                        onClick={() => navigate("/unitravel")}
+                    >
+                        <FontAwesomeIcon icon={faShareFromSquare} />
+                        <Text>Unitravel</Text>
+                    </Flex>
+                    <Box marginTop={2} height={"2px"} width={"100%"} backgroundColor={"gray.200"}></Box>
+                    <Flex
+                        width={"100%"}
+                        justifyContent={"flex-start"}
+                        marginTop={2}
+                        alignItems={"center"}
+                        gap={4}
+                        paddingX={2}
+                        onClick={handleLogout}
+                    >
+                        <FontAwesomeIcon icon={faSignOut} />
+                        <Text>Logout</Text>
+                    </Flex>
+                </VStack>
+            )}
+        </Box>
     );
 };
 

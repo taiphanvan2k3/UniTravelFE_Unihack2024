@@ -31,14 +31,19 @@ import provinces from "@/assets/images/city";
 import { useForm } from "react-hook-form";
 import { LoadingContext } from "@/contexts/LoadingContext";
 import { callAPI } from "@/services/api.service";
+import useStore from "@/hooks/useStore";
+import useLocationGeo from "@/hooks/useLocationGeo";
 function StorePage() {
+    const { setStore } = useStore();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [stores, setStores] = useState([]);
     const { setLoading } = useContext(LoadingContext);
     const { auth } = useContext(AuthContext);
     const [imageFiles, setImageFiles] = useState([]);
     const navigate = useNavigate();
+    const { location } = useLocationGeo();
     const imageInputRef = useRef(null);
+    const [storeAdded, setStoreAdded] = useState(false);
     const handleBoxClick = () => {
         if (imageInputRef.current) {
             imageInputRef.current.click();
@@ -55,6 +60,8 @@ function StorePage() {
     const onSubmit = async (data) => {
         setLoading(true);
         const formData = new FormData();
+        formData.append("longitude", location.longitude);
+        formData.append("latitude", location.latitude);
         formData.append("name", data.name);
         formData.append("businessType", data.businessType);
         if (data.thumbnail.length > 0) {
@@ -86,6 +93,7 @@ function StorePage() {
             console.log(result);
             onClose();
             setLoading(false);
+            setStoreAdded(true);
         } catch (error) {
             console.log(error);
         }
@@ -108,9 +116,10 @@ function StorePage() {
                 setLoading
             );
             setStores(resultData);
+            setStoreAdded(false);
         };
         fetchStores();
-    }, [auth.token, setLoading]);
+    }, [auth.token, setLoading, storeAdded]);
     if (auth?.user?.roles && auth.user.roles.includes("store-owner")) {
         return (
             <Grid templateColumns={"repeat(12, 1fr)"} width={"100%"} padding={"40px"} gap={18}>
@@ -241,7 +250,10 @@ function StorePage() {
                         key={index}
                         colSpan={3}
                         height={"300px"}
-                        onClick={() => navigate(`/store/${item["_id"]}`)}
+                        onClick={() => {
+                            navigate(`/store/${item["_id"]}`);
+                            setStore(item);
+                        }}
                     >
                         <Stack
                             borderRadius={"2xl"}

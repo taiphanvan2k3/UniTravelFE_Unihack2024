@@ -24,11 +24,16 @@
     "dotenv": "^16.4.5",
     "embla-carousel-react": "^8.1.6",
     "framer-motion": "^11.2.12",
+    "js-cookie": "^3.0.5",
+    "jwt-decode": "^4.0.0",
+    "ldrs": "^1.0.2",
     "react": "^18.3.1",
+    "react-cookie": "^7.2.0",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.52.0",
     "react-router-dom": "^6.24.0",
     "react-select": "^5.8.0",
+    "uuid": "^10.0.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
