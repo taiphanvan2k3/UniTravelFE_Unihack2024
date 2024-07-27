@@ -18,24 +18,50 @@ import {
     ModalOverlay,
     Stack,
     Text,
+    Box,
     useDisclosure,
 } from "@chakra-ui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenNib, faStar } from "@fortawesome/free-solid-svg-icons";
+import { faPenNib, faStar, faTicketAlt, faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useContext, useEffect, useState } from "react";
 import { extractTextFromDescription } from "@/services/utils";
 import { AuthContext } from "@/contexts/AuthContext";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import PostCard from "@/components/social/PostCard";
 import { useForm } from "react-hook-form";
-import { LoadingContext } from "@/contexts/LoadingContext";
+import PaypalComponent from "@/components/home/Paypal";
 
 function LocationPage() {
     const { auth } = useContext(AuthContext);
     const [location, setLocation] = useState({});
+    const [loading, setLoading] = useState(false);
     const roles = auth.user?.roles;
+    const navigate = useNavigate();
     const { id } = useParams();
-    const { setLoading } = useContext(LoadingContext);
+    const { isOpen: isOpenBookingForm, onOpen: onOpenBookingForm, onClose: onCloseBookingForm } = useDisclosure();
+    const [adultCount, setAdultCount] = useState(0);
+    const [childCount, setChildCount] = useState(0);
+    const [date, setDate] = useState("");
+    const [totalPrice, setTotalPrice] = useState(0);
+    const [locationPrice, setLocationPrice] = useState(0);
+    const [locationName, setLocationName] = useState("");
+    const { register, handleSubmit } = useForm();
+    const { isOpen: isOpenReviewForm, onOpenReviewForm, onCloseReviewForm } = useDisclosure();
+    const handleCount = ({ person, change }) => {
+        const countMap = {
+            adult: {
+                increment: () => setAdultCount((prev) => prev + 1),
+                decrement: () => setAdultCount((prev) => (prev > 0 ? prev - 1 : 0)),
+            },
+            child: {
+                increment: () => setChildCount((prev) => prev + 1),
+                decrement: () => setChildCount((prev) => (prev > 0 ? prev - 1 : 0)),
+            },
+        };
+
+        countMap[person][change]();
+    };
+
     useEffect(() => {
         const fetchLocations = async () => {
             try {
@@ -43,20 +69,33 @@ function LocationPage() {
                     `${import.meta.env.VITE_SERVER_BASE_URL}${import.meta.env.VITE_PROVINCES_EXPERIENCE_LOCATIONS}/get-detail/${id}`
                 );
                 const data = await res.json();
+                setLocationPrice(parseInt(data.price.discountedPrice.replace(/\./g, "").replace(" ₫", ""), 10));
                 setLocation(data);
+                setLocationName(data.locationName);
             } catch (error) {
-                throw new Error(error);
+                console.error("Error fetching location:", error);
             }
         };
+
         if (id) {
             fetchLocations();
         }
     }, [id]);
-    const { register, handleSubmit } = useForm();
-    const { isOpen, onOpen, onClose } = useDisclosure();
+
+    useEffect(() => {
+        setTotalPrice(locationPrice * (adultCount + childCount * 0.8));
+    }, [adultCount, childCount, locationPrice]);
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const year = String(date.getFullYear());
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}/${month}/${day}`;
+    };
+
     const onSubmit = async (data) => {
         const formData = new FormData();
-        setLoading(true);
         formData.append("content", data.content);
         formData.append("locationType", "experienceLocation");
         const images = Array.from(data.images);
@@ -72,6 +111,7 @@ function LocationPage() {
             });
         }
         const url = `${import.meta.env.VITE_SERVER_BASE_URL}${import.meta.env.VITE_POSTS_URL}/${id}/create-post`;
+        console.log(formData);
         const res = await fetch(url, {
             method: "POST",
             headers: {
@@ -80,32 +120,11 @@ function LocationPage() {
             body: formData,
         });
         const dataRes = await res.json();
-        const newData = {
-            experienceLocation: dataRes.experienceLocation,
-            id: dataRes.id,
-            author: {
-                username: auth.user.username,
-                displayName: auth.user.displayName,
-                imageUrl: auth.user.imageUrl,
-                badges: auth.user.badges,
-            },
-            content: data.content,
-            imageUrls: dataRes.imageUrls,
-            videoUrls: dataRes.videoUrls,
-            upvoteCount: 0,
-            downvoteUsers: [],
-            replies: [],
-            upvoteUsers: [],
-        };
-        setLocation((prevLocation) => ({
-            ...prevLocation,
-            comments: [newData, ...(prevLocation.comments || [])],
-        }));
         if (dataRes.status === "success") {
-            onClose();
+            onCloseReviewForm();
         }
-        setLoading(false);
     };
+
     return (
         <>
             <Grid templateColumns="repeat(12, 1fr)" gap={10} paddingX={"100px"}>
@@ -128,7 +147,7 @@ function LocationPage() {
                 <GridItem colSpan={9}>
                     <Flex justifyContent={"space-between"} alignItems={"center"}>
                         <Text fontWeight={"semibold"} fontSize={"2xl"} className="font-roboto">
-                            {location.locationName}
+                            {locationName}
                         </Text>
                     </Flex>
                     <Flex alignContent={"end"} gap={2}>
@@ -150,51 +169,20 @@ function LocationPage() {
                         </Text>
                     </Flex>
                 </GridItem>
-                {/* <GridItem rowSpan={1} colSpan={12}>
-                    <Stack>
-                        <Text fontWeight={"bold"} fontSize={"2xl"}>
-                            Top 5 tour guider
-                        </Text>
-                        <Grid templateColumns={"repeat(5, 1fr)"} gap={10} padding={"30px"}>
-                            {tourGuider.map((item, index) => (
-                                <GridItem
-                                    key={index}
-                                    colSpan={1}
-                                    boxShadow={"lg"}
-                                    borderRadius={"md"}
-                                    className="group"
-                                >
-                                    <Stack className="w-full h-full">
-                                        <div className="h-full group relative items-center justify-center overflow-hidden cursor-pointer hover:shadow-xl hover:shadow-black/40 transition-shadow rounded-md">
-                                            <Image src={item.avatar} className="rounded-t-md" />
-                                            <Flex
-                                                padding={"10px"}
-                                                justifyContent={"space-between"}
-                                                alignItems={"center"}
-                                            >
-                                                <Stack>
-                                                    <Text fontWeight={"bold"} fontSize={"md"}>
-                                                        {item.name}
-                                                    </Text>
-                                                    <Flex alignItems={"center"} gap={2}>
-                                                        <Text>{item.rate}</Text>
-                                                        <FontAwesomeIcon
-                                                            icon={faStar}
-                                                            className="text-yellow-400 size-4"
-                                                        />
-                                                    </Flex>
-                                                </Stack>
-                                                <Button variant={"outline"} colorScheme={"blue"}>
-                                                    Contact
-                                                </Button>
-                                            </Flex>
-                                        </div>
-                                    </Stack>
-                                </GridItem>
-                            ))}
-                        </Grid>
-                    </Stack>
-                </GridItem> */}
+                <GridItem rowSpan={1} colSpan={12}>
+                    <Flex justifyContent={"flex-end"} width="100%">
+                        <Button
+                            leftIcon={<FontAwesomeIcon icon={faTicketAlt} />}
+                            colorScheme="blue"
+                            className="hover:scale-105 duration-300 ease-in-out mt-5"
+                            onClick={() => {
+                                onOpenBookingForm();
+                            }}
+                        >
+                            Đặt vé
+                        </Button>
+                    </Flex>
+                </GridItem>
 
                 {!roles?.includes("tour guider") && (
                     <>
@@ -205,7 +193,7 @@ function LocationPage() {
                                 </Text>
                                 <IconButton
                                     onClick={() => {
-                                        onOpen();
+                                        onOpenReviewForm();
                                     }}
                                 >
                                     <FontAwesomeIcon icon={faPenNib} />
@@ -213,7 +201,7 @@ function LocationPage() {
                             </Flex>
                         </GridItem>
                         <GridItem rowSpan={8} colSpan={12} borderRadius={"lg"}>
-                            {Array.isArray(location.comments) && location.comments.length > 0 ? (
+                            {Array.isArray(location?.comments) && location.comments.length > 0 ? (
                                 location.comments.map((item, index) => <PostCard key={item.id} {...item} />)
                             ) : (
                                 <Text>No comments</Text>
@@ -222,7 +210,7 @@ function LocationPage() {
                     </>
                 )}
             </Grid>
-            <Modal isOpen={isOpen} onClose={onClose}>
+            <Modal isOpen={isOpenReviewForm} onClose={onCloseReviewForm}>
                 <ModalOverlay />
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <ModalContent>
@@ -244,7 +232,7 @@ function LocationPage() {
                         </ModalBody>
 
                         <ModalFooter>
-                            <Button mr={3} onClick={onClose}>
+                            <Button mr={3} onClick={onCloseReviewForm}>
                                 Close
                             </Button>
                             <Button colorScheme="blue" type="submit">
@@ -253,6 +241,119 @@ function LocationPage() {
                         </ModalFooter>
                     </ModalContent>
                 </form>
+            </Modal>
+            <Modal isOpen={isOpenBookingForm} onClose={onCloseBookingForm}>
+                <ModalOverlay />
+                <ModalContent>
+                    <ModalHeader>Mẫu đặt vé</ModalHeader>
+                    <ModalCloseButton />
+                    <ModalBody>
+                        <Box border="1px" borderColor="gray.200" borderRadius="md" p={4} mb={4}>
+                            <FormControl id="adultQuantity" mb={5}>
+                                <Flex alignItems={"center"} justifyContent={"space-between"}>
+                                    <Flex direction={"column"} alignItems={"start"}>
+                                        <FormLabel>{locationPrice.toLocaleString("vi-VN")} ₫/Người lớn</FormLabel>
+                                        <Text fontSize={"md"} marginBottom={0}>
+                                            Trên 140 cm
+                                        </Text>
+                                    </Flex>
+                                    <Flex alignItems="center">
+                                        <IconButton
+                                            icon={<FontAwesomeIcon icon={faMinus} color="blue" />}
+                                            onClick={() => handleCount({ person: "adult", change: "decrement" })}
+                                            isDisabled={adultCount <= 0}
+                                            aria-label="Decrease"
+                                        />
+                                        <Input
+                                            type="number"
+                                            value={adultCount}
+                                            readOnly
+                                            textAlign="center"
+                                            width="60px"
+                                            mx={2}
+                                        />
+                                        <IconButton
+                                            icon={<FontAwesomeIcon icon={faPlus} color="red" />}
+                                            onClick={() => handleCount({ person: "adult", change: "increment" })}
+                                            aria-label="Increase"
+                                        />
+                                    </Flex>
+                                </Flex>
+                            </FormControl>
+                            <FormControl id="childQuantity" mb={5}>
+                                <Flex alignItems={"center"} justifyContent={"space-between"}>
+                                    <Flex direction={"column"} alignItems={"start"}>
+                                        <FormLabel>
+                                            {(locationPrice * 0.8).toFixed(0).toLocaleString("vi-VN")} ₫/Trẻ em(80%)
+                                        </FormLabel>
+                                        <Text fontSize={"md"} marginBottom={0}>
+                                            Từ 100 - 140 cm
+                                        </Text>
+                                    </Flex>
+                                    <Flex alignItems="center">
+                                        <IconButton
+                                            icon={<FontAwesomeIcon icon={faMinus} color="blue" />}
+                                            onClick={() => handleCount({ person: "child", change: "decrement" })}
+                                            isDisabled={childCount <= 0}
+                                            aria-label="Decrease"
+                                        />
+                                        <Input
+                                            type="number"
+                                            value={childCount}
+                                            readOnly
+                                            textAlign="center"
+                                            width="60px"
+                                            mx={2}
+                                        />
+                                        <IconButton
+                                            icon={<FontAwesomeIcon icon={faPlus} color="red" />}
+                                            onClick={() => handleCount({ person: "child", change: "increment" })}
+                                            aria-label="Increase"
+                                        />
+                                    </Flex>
+                                </Flex>
+                            </FormControl>
+                            <FormControl id="date" mb={4}>
+                                <Flex alignItems={"center"} justifyContent={"space-between"}>
+                                    <FormLabel>Ngày bắt đầu</FormLabel>
+                                    <Input
+                                        width={"160px"}
+                                        type="date"
+                                        onChange={(e) => setDate(formatDate(e.target.value))}
+                                    />
+                                </Flex>
+                            </FormControl>
+                        </Box>
+                        <Divider></Divider>
+                        <Box border="1px" borderColor="gray.200" borderRadius="md" p={4} mb={4}>
+                            <Flex justifyContent={"space-between"} alignItems={"center"}>
+                                <Text fontWeight={"bold"} fontSize={"lg"} marginBottom={0}>
+                                    Tổng tiền:
+                                </Text>
+                                <Text fontSize={"lg"} marginBottom={0}>
+                                    {totalPrice.toLocaleString("vi-VN")} ₫
+                                </Text>
+                            </Flex>
+                        </Box>
+                    </ModalBody>
+                    <ModalFooter>
+                        <PaypalComponent
+                            locationName={locationName}
+                            totalPrice={totalPrice}
+                            childCount={childCount}
+                            childPrice={locationPrice * 0.8}
+                            adultCount={adultCount}
+                            adultPrice={locationPrice}
+                            date={date}
+                        />
+                        {/* <Button colorScheme="blue" mr={3} onClick={onCloseBookingForm}>
+                            Submit
+                        </Button>
+                        <Button variant="ghost" onClick={onCloseBookingForm}>
+                            Close
+                        </Button> */}
+                    </ModalFooter>
+                </ModalContent>
             </Modal>
         </>
     );
