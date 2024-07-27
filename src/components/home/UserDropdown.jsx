@@ -62,13 +62,11 @@ const UserDropdown = ({ userInfo }) => {
                 user: null,
                 token: null,
             });
-            console.log("Logout");
             Cookies.remove("access_token"); // Replace 'access_token' with the name of the cookie you want to delete
             navigate("/");
             setCookie("redirect", "", 0);
             setLoading(false);
         } catch (error) {
-            console.log(error);
             toast({
                 title: "Logout failed",
                 status: "error",

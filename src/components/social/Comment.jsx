@@ -63,7 +63,6 @@ function Comment({ postId, _id, user, content, imageUrls, videoUrls, upvoteCount
                     });
                 }
                 const url = `${import.meta.env.VITE_SERVER_BASE_URL}${import.meta.env.VITE_POSTS_URL}/${postId}/${_id}/add-reply`;
-                console.log(url);
                 const res = await fetch(url, {
                     method: "POST",
                     headers: {

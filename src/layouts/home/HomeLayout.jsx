@@ -1,5 +1,4 @@
 import LoadingOverlay from "@/components/common/LoadingOverlay";
-import Footer from "@/components/home/Footer";
 import NavBar from "@/components/home/NavBar";
 import { LocationProvider } from "@/hooks/useLocation";
 import { StoreProvider } from "@/hooks/useStore";
