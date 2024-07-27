@@ -11,7 +11,6 @@ import { FeedProvider } from "@/contexts/FeedContext";
 function SocialLayout() {
     const accessToken = Cookies.get("access_token");
     const decodedPayload = jwtDecode(accessToken);
-    console.log(decodedPayload);
     return (
         <FeedProvider>
             <Container paddingX={"2rem"} maxW={"container.2xl"}>

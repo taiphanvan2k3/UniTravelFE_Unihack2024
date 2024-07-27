@@ -20,6 +20,8 @@ import { useContext, useReducer, useRef, useState } from "react";
 import Comment from "./Comment";
 import reducer from "@/utils/vote";
 import { AuthContext } from "@/contexts/AuthContext";
+import { useFeeds } from "@/contexts/FeedContext";
+import Loading from "../common/Loading";
 function PostCard({
     id,
     store,
@@ -33,6 +35,8 @@ function PostCard({
     downvoteUsers,
     experienceLocation,
 }) {
+    const [newComment, setNewComment] = useState(comments);
+    const [loading, setLoading] = useState(false);
     const imageInputRef = useRef(null);
     const videoInputRef = useRef(null);
     const [imagesFile, setImagesFile] = useState([]);
@@ -56,19 +60,21 @@ function PostCard({
         try {
             if (commentInput && commentInput.length > 0) {
                 const formData = new FormData();
+
                 formData.append("content", commentInput);
-                // const imagesArray = Array.from(imagesFile);
-                // const videosArray = Array.from(videosFile);
-                // if (imagesArray.length > 0) {
-                //     imagesArray.forEach((image) => {
-                //         formData.append("images", image);
-                //     });
-                // }
-                // if (videosArray.length > 0) {
-                //     videosArray.forEach((video) => {
-                //         formData.append("videos", video);
-                //     });
-                // }
+                const imagesArray = Array.from(imagesFile);
+                const videosArray = Array.from(videosFile);
+                if (imagesArray.length > 0) {
+                    imagesArray.forEach((image) => {
+                        formData.append("images", image);
+                    });
+                }
+                if (videosArray.length > 0) {
+                    videosArray.forEach((video) => {
+                        formData.append("videos", video);
+                    });
+                }
+                setLoading(true);
                 const res = await fetch(
                     `${import.meta.env.VITE_SERVER_BASE_URL}${import.meta.env.VITE_POSTS_URL}/${id}/add-comment`,
                     {
@@ -81,116 +87,145 @@ function PostCard({
                 );
                 if (!res.ok) {
                     console.log("Failed to add comment");
+                } else {
+                    const data = await res.json();
+                    const user = auth.user;
+                    const newData = {
+                        _id: data._id,
+                        user: {
+                            displayName: user.displayName,
+                            imageUrl: user.imageUrl,
+                            badges: user.badges,
+                        },
+                        content: commentInput,
+                        imageUrls: data.imageUrls,
+                        videoUrls: data.videoUrls,
+                        upvoteCount: 0,
+                        downvoteUsers: [],
+                        replies: [],
+                    };
+
+                    // Update the state with the new comment
+                    setNewComment((prevComments) => [newData, ...prevComments]);
+                    setLoading(false);
+                    setCommentInput("");
+                    // Log the updated comments
                 }
             }
         } catch (error) {
             throw new Error(error);
         }
     };
-    return (
-        <Container marginTop={5} boxShadow={"lg"} borderRadius={"lg"} maxW={"container.2xl"} padding={"50px 150px"}>
-            <VisuallyHidden>
-                <Input multiple onChange={handleImageChange} ref={imageInputRef} type={"file"} name="image" />
-            </VisuallyHidden>
-            <VisuallyHidden>
-                <Input multiple onChange={handleVideoChange} ref={videoInputRef} type={"file"} name="video" />
-            </VisuallyHidden>
-            <Flex>
-                <Box position={"relative"}>
-                    <Avatar size={"lg"} src={author.imageUrl} />
-                    <Image
-                        position={"absolute"}
-                        top={0}
-                        right={0}
-                        width={"24px"}
-                        borderRadius={"full"}
-                        src={author.badges[0]?.imageUrl}
-                    />
-                </Box>
-                <VStack alignItems={"start"} marginLeft={5}>
-                    <Text fontWeight={"bold"} fontSize={"lg"}>
-                        {author.displayName}
-                    </Text>
-                    <Text fontWeight={"semibold"} fontSize={"md"}>
-                        {store === undefined
-                            ? `${experienceLocation.locationName}-${experienceLocation.address}`
-                            : `${store.name}`}
-                    </Text>
-                </VStack>
-            </Flex>
-            <Text marginTop={5}>{content}</Text>
-            <Flex marginTop={"20px"} gap={5} flexWrap={"wrap"}>
-                {Array.isArray(imageUrls)
-                    ? imageUrls?.map((url, index) => (
-                          <Image borderRadius={"xl"} key={index} width={"170px"} height={"200px"} src={url} />
-                      ))
-                    : null}
-                {Array.isArray(videoUrls)
-                    ? videoUrls?.map((url, index) => (
-                          <video key={index} src={url} width={"170px"} height={"250px"} controls />
-                      ))
-                    : null}
-            </Flex>
-            <Flex marginTop={"30px"} gap={5} alignItems={"center"}>
-                <Flex padding={4} borderRadius={"2xl"} backgroundColor={"gray.200"} gap={3} alignItems={"center"}>
-                    <UpVoteIcon
-                        onClick={() => dispatch({ type: "upvote" })}
-                        fill={state.isUpvoted ? "#0091FF" : "#000000"}
-                    />
-                    <Text fontWeight={"bold"}>{state.votes}</Text>
-                    <DownVoteIcon
-                        onClick={() => {
-                            if (state.votes != 0) {
-                                dispatch({ type: "downvote" });
-                            }
-                        }}
-                        fill={state.isDownvoted ? "#0091FF" : "#000000"}
-                    />
+    if (loading) {
+        return <Loading />;
+    } else {
+        return (
+            <Container marginTop={5} boxShadow={"lg"} borderRadius={"lg"} maxW={"container.2xl"} padding={"50px 150px"}>
+                <VisuallyHidden>
+                    <Input multiple onChange={handleImageChange} ref={imageInputRef} type={"file"} name="image" />
+                </VisuallyHidden>
+                <VisuallyHidden>
+                    <Input multiple onChange={handleVideoChange} ref={videoInputRef} type={"file"} name="video" />
+                </VisuallyHidden>
+                <Flex>
+                    <Box position={"relative"}>
+                        <Avatar size={"lg"} src={author.imageUrl} />
+                        <Image
+                            position={"absolute"}
+                            top={0}
+                            right={0}
+                            width={"24px"}
+                            borderRadius={"full"}
+                            src={author.badges[0]?.imageUrl}
+                        />
+                    </Box>
+                    <VStack alignItems={"start"} marginLeft={5}>
+                        <Text fontWeight={"bold"} fontSize={"lg"}>
+                            {author.displayName}
+                        </Text>
+                        <Text fontWeight={"semibold"} fontSize={"md"}>
+                            {store
+                                ? store.name
+                                : experienceLocation && experienceLocation.locationName && experienceLocation.address
+                                  ? `${experienceLocation.locationName}-${experienceLocation.address}`
+                                  : ""}
+                        </Text>
+                    </VStack>
                 </Flex>
-            </Flex>
-            <Flex
-                alignItems={"center"}
-                gap={5}
-                border={"2px"}
-                borderRadius={"full"}
-                borderColor={"gray.200"}
-                padding={1}
-                marginTop={"25px"}
-                justifyContent={"flex-end"}
-            >
-                <Input
-                    placeholder="Add a comment"
-                    width={"100%"}
-                    border={"none"}
-                    _focusVisible="none"
-                    height={"50px"}
-                    onChange={(e) => setCommentInput(e.target.value)}
-                />
-                <IconButton
-                    onClick={() => imageInputRef.current.click()}
+                <Text marginTop={5}>{content}</Text>
+                <Flex marginTop={"20px"} gap={5} flexWrap={"wrap"}>
+                    {Array.isArray(imageUrls)
+                        ? imageUrls?.map((url, index) => (
+                              <Image borderRadius={"xl"} key={index} width={"170px"} height={"200px"} src={url} />
+                          ))
+                        : null}
+                    {Array.isArray(videoUrls)
+                        ? videoUrls?.map((url, index) => (
+                              <video key={index} src={url} width={"170px"} height={"250px"} controls />
+                          ))
+                        : null}
+                </Flex>
+                <Flex marginTop={"30px"} gap={5} alignItems={"center"}>
+                    <Flex padding={4} borderRadius={"2xl"} backgroundColor={"gray.200"} gap={3} alignItems={"center"}>
+                        <UpVoteIcon
+                            onClick={() => dispatch({ type: "upvote" })}
+                            fill={state.isUpvoted ? "#0091FF" : "#000000"}
+                        />
+                        <Text fontWeight={"bold"}>{state.votes}</Text>
+                        <DownVoteIcon
+                            onClick={() => {
+                                if (state.votes != 0) {
+                                    dispatch({ type: "downvote" });
+                                }
+                            }}
+                            fill={state.isDownvoted ? "#0091FF" : "#000000"}
+                        />
+                    </Flex>
+                </Flex>
+                <Flex
+                    alignItems={"center"}
+                    gap={5}
+                    border={"2px"}
                     borderRadius={"full"}
-                    icon={<FontAwesomeIcon icon={faImage} />}
-                ></IconButton>
-                <IconButton
-                    onClick={() => videoInputRef.current.click()}
-                    borderRadius={"full"}
-                    icon={<FontAwesomeIcon icon={faVideo} />}
-                ></IconButton>
-                <Button
-                    borderRadius={"full"}
-                    paddingX={7}
-                    colorScheme={"blue"}
-                    height={"50px"}
-                    onClick={handleAddComment}
+                    borderColor={"gray.200"}
+                    padding={1}
+                    marginTop={"25px"}
+                    justifyContent={"flex-end"}
                 >
-                    Save
-                </Button>
-            </Flex>
-            {Array.isArray(comments) && comments.length > 0
-                ? comments.map((comment) => <Comment key={comment.id} postId={id} {...comment} />)
-                : null}
-        </Container>
-    );
+                    <Input
+                        placeholder="Add a comment"
+                        width={"100%"}
+                        border={"none"}
+                        _focusVisible="none"
+                        height={"50px"}
+                        onChange={(e) => setCommentInput(e.target.value)}
+                    />
+                    <IconButton
+                        onClick={() => imageInputRef.current.click()}
+                        borderRadius={"full"}
+                        icon={<FontAwesomeIcon icon={faImage} />}
+                    ></IconButton>
+                    <IconButton
+                        onClick={() => videoInputRef.current.click()}
+                        borderRadius={"full"}
+                        icon={<FontAwesomeIcon icon={faVideo} />}
+                    ></IconButton>
+                    <Button
+                        borderRadius={"full"}
+                        paddingX={7}
+                        colorScheme={"blue"}
+                        height={"50px"}
+                        onClick={handleAddComment}
+                    >
+                        Save
+                    </Button>
+                </Flex>
+                {Array.isArray(newComment) && newComment.length > 0
+                    ? newComment.map((comment) => <Comment key={comment._id} postId={id} {...comment} />)
+                    : null}
+            </Container>
+        );
+    }
 }
 PostCard.propTypes = {
     id: PropTypes.string.isRequired,

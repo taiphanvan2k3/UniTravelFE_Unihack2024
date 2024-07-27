@@ -153,8 +153,10 @@ function SchedulePage() {
                                     </FormControl>
                                     <FormControl isRequired>
                                         <FormLabel>Type</FormLabel>
-                                        <Input {...register("type", { required: true })} />
-                                        {errors.type && <p>Type is required.</p>}
+                                        <Select {...register("type", { required: true })}>
+                                            <option value="province">Province</option>
+                                            <option value="location">Location</option>
+                                        </Select>
                                     </FormControl>
                                     <FormControl isRequired>
                                         <FormLabel>Location</FormLabel>

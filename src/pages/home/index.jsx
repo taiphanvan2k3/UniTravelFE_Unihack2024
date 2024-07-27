@@ -4,9 +4,11 @@ import { useContext, useEffect, useState } from "react";
 import { callAPI } from "@/services/api.service";
 import { LoadingContext } from "@/contexts/LoadingContext";
 import { formatPrice } from "@/utils";
+import { useNavigate } from "react-router-dom";
 function HomePage() {
     const [topLocation, setTopLocation] = useState([]);
     const { setLoading } = useContext(LoadingContext);
+    const navigator = useNavigate();
     useEffect(() => {
         const fetchData = async () => {
             const url = `${import.meta.env.VITE_PROVINCES_EXPERIENCE_LOCATIONS}/top?limit=10`;
@@ -28,7 +30,7 @@ function HomePage() {
             <div className="p-10">
                 <SimpleGrid columns={[1, 2, null, 4]} spacing="20px">
                     {topLocation.map((item, index) => (
-                        <GridItem key={index} height={"full"}>
+                        <GridItem key={index} height={"full"} onClick={() => navigator(`/location/${item.id}`)}>
                             <Container
                                 key={index}
                                 justifyContent={"center"}

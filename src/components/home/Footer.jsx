@@ -5,7 +5,6 @@ import { faEnvelope, faLocationArrow, faPhone } from "@fortawesome/free-solid-sv
 
 function Footer() {
     const navItems = ["Home", "Bookings", "Reviews", "Supports"];
-    console.log("Footer re-render");
     return (
         <footer className="w-full bg-black text-white mt-10 p-12 grid grid-cols-4 ">
             <div className={"col-span-1"}>

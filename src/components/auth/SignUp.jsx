@@ -89,7 +89,6 @@ function SignUp() {
                     isClosable: true,
                 });
             } catch (error) {
-                console.log(error);
                 toast({
                     title: error.message,
                     status: "error",
