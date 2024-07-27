@@ -19,13 +19,10 @@ const storeOwnerPages = [
     { title: "Store", path: ROUTE_CONSTANTS.STORE_PAGE },
 ];
 function NavBar() {
-    console.log("Re-render");
     const { auth } = useContext(AuthContext);
-    console.log(auth.user);
     const [pages, setPages] = useState(travelPages);
     useEffect(() => {
         if (auth?.user && auth.user.roles.includes("store-owner")) {
-            console.log("Store owner");
             setPages(storeOwnerPages);
         } else {
             setPages(travelPages);

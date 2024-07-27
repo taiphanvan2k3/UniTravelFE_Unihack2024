@@ -89,8 +89,6 @@ function StorePage() {
             if (!res.ok) {
                 throw new Error("Failed to create store");
             }
-            const result = await res.json();
-            console.log(result);
             onClose();
             setLoading(false);
             setStoreAdded(true);

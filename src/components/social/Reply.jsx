@@ -6,7 +6,7 @@ import { useReducer } from "react";
 import reducer from "@/utils/vote";
 import { DefaultAvatar01 } from "@/assets/images";
 
-function Reply({ postId, _id, user, content, imageUrls, videoUrls, upvoteCount, replies }) {
+function Reply({ postId, _id, user, content, imageUrls, videoUrls, upvoteCount }) {
     const [state, dispatch] = useReducer(reducer, { votes: upvoteCount, isUpvoted: false, isDownvoted: false });
     return (
         <Container maxW={"container.2xl"} padding={"25px 20px"} borderRadius={"lg"}>
@@ -31,9 +31,10 @@ function Reply({ postId, _id, user, content, imageUrls, videoUrls, upvoteCount, 
                     <Text fontWeight="bold">{user?.displayName}</Text>
                     <Text>{content}</Text>
                     <Flex gap={4}>
-                        {imageUrls.map((url, index) => (
-                            <Image key={index} src={url} width={"100px"} height={"100px"} borderRadius={"lg"} />
-                        ))}
+                        {Array.isArray(imageUrls) &&
+                            imageUrls.map((url, index) => (
+                                <Image key={index} src={url} width={"100px"} height={"100px"} borderRadius={"lg"} />
+                            ))}
                         {Array.isArray(videoUrls)
                             ? videoUrls?.map((url, index) => (
                                   <video key={index} src={url} width={"170px"} height={"250px"} controls />
@@ -69,7 +70,6 @@ Reply.propTypes = {
     imageUrls: PropTypes.array.isRequired,
     videoUrls: PropTypes.array.isRequired,
     upvoteCount: PropTypes.number.isRequired,
-    replies: PropTypes.array.isRequired,
 };
 
 export default Reply;

@@ -136,17 +136,42 @@ function StoreDetailPage() {
                         body: formData,
                     }
                 );
-                console.log(res);
+                const dataRes = await res.json();
+                const newData = {
+                    experienceLocation: dataRes.experienceLocation,
+                    id: dataRes.id,
+                    author: {
+                        username: auth.user.username,
+                        displayName: auth.user.displayName,
+                        imageUrl: auth.user.imageUrl,
+                        badges: auth.user.badges,
+                    },
+                    content: content,
+                    imageUrls: dataRes.imageUrls,
+                    videoUrls: dataRes.videoUrls,
+                    upvoteCount: 0,
+                    downvoteUsers: [],
+                    replies: [],
+                    upvoteUsers: [],
+                };
+                // store?.comments
+                setStore((prev) => ({
+                    ...prev,
+                    comments: [newData, ...(prev.comments || [])],
+                }));
+                setContent("");
+                setImagesFile([]);
+                setVideosFile([]);
                 if (!res.ok) {
                     throw new Error(res.statusText);
                 }
+                console.log(store.comments);
             } catch (error) {
                 throw new Error(error);
             }
         }
     };
     const download = (e) => {
-        console.log(e.target.href);
         fetch(e.target.href, {
             method: "GET",
             headers: {},

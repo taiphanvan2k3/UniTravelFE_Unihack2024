@@ -24,6 +24,7 @@ import Reply from "./Reply";
 import { AuthContext } from "@/contexts/AuthContext";
 
 function Comment({ postId, _id, user, content, imageUrls, videoUrls, upvoteCount, replies }) {
+    const [newReplies, setNewReplies] = useState(replies);
     const { auth } = useContext(AuthContext);
     const [state, dispatch] = useReducer(reducer, { votes: upvoteCount, isUpvoted: false, isDownvoted: false });
     const [showBoxComment, setShowBoxComment] = useState(false);
@@ -72,6 +73,27 @@ function Comment({ postId, _id, user, content, imageUrls, videoUrls, upvoteCount
                 });
                 if (!res.ok) {
                     console.log("Failed to add reply");
+                } else {
+                    const data = await res.json();
+                    console.log("Data:", data);
+                    console.log(data.imageUrls);
+                    const newData = {
+                        _id: data._id,
+                        content: newComment,
+                        imageUrls: data.imageUrls,
+                        videoUrls: data.videoUrls,
+                        upvoteCount: 0,
+                        upvoteUsers: [],
+                        downvoteUsers: [],
+                        replies: [],
+                        user: {
+                            displayName: user.displayName,
+                            imageUrl: user.imageUrl,
+                            badges: user.badges,
+                        },
+                    };
+                    setNewReplies((prev) => [newData, ...prev]);
+                    setNewComment("");
                 }
             }
         } catch (err) {
@@ -178,9 +200,9 @@ function Comment({ postId, _id, user, content, imageUrls, videoUrls, upvoteCount
                             </Button>
                         </Flex>
                     )}
-                    {replies && replies.length > 0 && (
+                    {newReplies && newReplies.length > 0 && (
                         <Box pl={4} borderLeft="1px" borderColor="gray.200" mt={2}>
-                            {replies.map((reply) => (
+                            {newReplies.map((reply) => (
                                 <Reply key={reply._id} postId={postId} _id={_id} {...reply} />
                             ))}
                         </Box>

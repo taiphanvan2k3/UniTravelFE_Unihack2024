@@ -28,7 +28,9 @@ const callAPI = async (url, method = "GET", data = null, headers = {}, setLoadin
             }
         }
         const responseData = await response.json();
-        setLoading(false);
+        if (setLoading) {
+            setLoading(false);
+        }
         return responseData;
     } finally {
         if (setLoading) {
