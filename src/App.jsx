@@ -35,7 +35,7 @@ export default function App() {
                         <Route path="reviews" element={<ReviewsPage />} />
                         <Route path="provinces" element={<ProvincesPage />} />
                         <Route path="provinces/:code" element={<ProvinceDetailPage />} />
-                        <Route path="provinces/:code/location/" element={<LocationPage />} />
+                        <Route path="location/:id" element={<LocationPage />} />
                         <Route path="/schedule" element={<SchedulePage />} />
                         <Route path="/store" element={<StorePage />} />
                         <Route path="/store/:storeId" element={<StoreDetailPage />} />

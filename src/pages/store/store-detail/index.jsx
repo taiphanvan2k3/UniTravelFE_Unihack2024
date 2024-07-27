@@ -1,10 +1,13 @@
 import { LoadingContext } from "@/contexts/LoadingContext";
 import {
+    Button,
     Container,
     Flex,
     Grid,
     GridItem,
+    IconButton,
     Image,
+    Input,
     Modal,
     ModalBody,
     ModalCloseButton,
@@ -13,23 +16,25 @@ import {
     ModalOverlay,
     Text,
     useDisclosure,
+    VisuallyHidden,
     VStack,
 } from "@chakra-ui/react";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import provinces from "@/assets/images/city";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDownload, faQrcode } from "@fortawesome/free-solid-svg-icons";
+import { faDownload, faImage, faQrcode, faVideo } from "@fortawesome/free-solid-svg-icons";
 import Post from "@/components/home/Store/Post";
-import Cookies from "js-cookie";
+import { AuthContext } from "@/contexts/AuthContext";
 function StoreDetailPage() {
-    const accessToken = Cookies.get("access_token");
+    const { auth } = useContext(AuthContext);
     const { storeId } = useParams();
     const [store, setStore] = useState();
     const { loading, setLoading } = useContext(LoadingContext);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [isQrCodeModalOpen, setIsQrCodeModalOpen] = useState(false);
     const [qrCode, setQrCode] = useState();
+    const [content, setContent] = useState();
     const handleClickQrButton = async () => {
         try {
             setIsQrCodeModalOpen(true);
@@ -48,7 +53,7 @@ function StoreDetailPage() {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${accessToken}`,
+                    Authorization: `Bearer ${auth.token}`,
                 },
             });
 
@@ -89,7 +94,57 @@ function StoreDetailPage() {
         };
         fetchStores();
     }, [storeId, setLoading]);
-    console.log(store?.comments);
+    const imageInputRef = useRef(null);
+    const videoInputRef = useRef(null);
+    const [imagesFile, setImagesFile] = useState([]);
+    const [videosFile, setVideosFile] = useState([]);
+    const handleImageChange = (event) => {
+        if (event.target.files.length > 0) {
+            const file = event.target.files;
+            setImagesFile(file);
+        }
+    };
+    const handleVideoChange = (event) => {
+        if (event.target.files.length > 0) {
+            const file = event.target.files;
+            setVideosFile(file);
+        }
+    };
+    const handleAddPost = async () => {
+        if (content && content.length > 0) {
+            const formData = new FormData();
+            formData.append("content", content);
+            formData.append("locationType", "store");
+            if (imagesFile.length > 0) {
+                imagesFile.forEach((image) => {
+                    formData.append("images", image);
+                });
+            }
+            if (videosFile.length > 0) {
+                videosFile.forEach((video) => {
+                    formData.append("videos", video);
+                });
+            }
+            try {
+                const res = await fetch(
+                    `${import.meta.env.VITE_SERVER_BASE_URL}${import.meta.env.VITE_POSTS_URL}/${storeId}/create-post`,
+                    {
+                        method: "POST",
+                        headers: {
+                            Authorization: `Bearer ${auth.token}`,
+                        },
+                        body: formData,
+                    }
+                );
+                console.log(res);
+                if (!res.ok) {
+                    throw new Error(res.statusText);
+                }
+            } catch (error) {
+                throw new Error(error);
+            }
+        }
+    };
     const download = (e) => {
         console.log(e.target.href);
         fetch(e.target.href, {
@@ -113,6 +168,12 @@ function StoreDetailPage() {
     if (!loading) {
         return (
             <Container maxW={"container.2xl"} height={"100vh"} paddingX={"3rem"}>
+                <VisuallyHidden>
+                    <Input multiple onChange={handleImageChange} ref={imageInputRef} type={"file"} name="image" />
+                </VisuallyHidden>
+                <VisuallyHidden>
+                    <Input multiple onChange={handleVideoChange} ref={videoInputRef} type={"file"} name="video" />
+                </VisuallyHidden>
                 <Grid templateColumns={"repeat(6, 1fr)"} gap={10}>
                     <GridItem colSpan={2}>
                         <VStack>
@@ -197,6 +258,42 @@ function StoreDetailPage() {
                 <Text marginTop={10} fontWeight={"bold"} fontSize={"2xl"} className="font-roboto" color={"black"}>
                     Reviews
                 </Text>
+                <Flex
+                    marginTop={5}
+                    justifyContent={"space-between"}
+                    alignItems={"center"}
+                    gap={5}
+                    border={"2px"}
+                    borderRadius={"full"}
+                    borderColor={"gray.200"}
+                    padding={2}
+                >
+                    <Input
+                        placeholder="Add a comment"
+                        width={"500px"}
+                        border={"none"}
+                        _focusVisible="none"
+                        height={"50px"}
+                        onChange={(e) => setContent(e.target.value)}
+                    />
+                    <Flex alignItems={"center"} gap={3}>
+                        <IconButton borderRadius={"full"} onClick={() => imageInputRef.current.click()}>
+                            <FontAwesomeIcon icon={faImage} />
+                        </IconButton>
+                        <IconButton borderRadius={"full"} onClick={() => videoInputRef.current.click()}>
+                            <FontAwesomeIcon icon={faVideo} />
+                        </IconButton>
+                        <Button
+                            onClick={handleAddPost}
+                            borderRadius={"full"}
+                            paddingX={7}
+                            colorScheme={"blue"}
+                            height={"50px"}
+                        >
+                            Save
+                        </Button>
+                    </Flex>
+                </Flex>
                 {store?.comments.map((comment) => (
                     <Post
                         id={comment.id}
