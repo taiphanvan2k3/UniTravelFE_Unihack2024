@@ -10,13 +10,14 @@ function HomeLayout() {
         <>
             <LocationProvider>
                 <StoreProvider>
-                    <div className="w-full min-h-screen bg-white">
-                        <NavBar />
-                        <main>
-                            <Outlet />
-                        </main>
+                    <div className="min-h-full">
+                        <div className="w-full bg-white">
+                            <NavBar />
+                            <main>
+                                <Outlet />
+                            </main>
+                        </div>
                     </div>
-                    <Footer />
                     <LoadingOverlay />
                 </StoreProvider>
             </LocationProvider>

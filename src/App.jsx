@@ -18,7 +18,11 @@ import StorePage from "./pages/store";
 import SchedulePage from "./pages/home/schedule";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-
+import StoreDetailPage from "./pages/store/store-detail";
+import SocialLayout from "./layouts/social/SocialLayout";
+import SocialPage from "./pages/social";
+import PrivateRoute from "./routes/PrivateRoutes";
+import FindStorePage from "./pages/home/find-store";
 const queryClient = new QueryClient();
 export default function App() {
     return (
@@ -34,6 +38,8 @@ export default function App() {
                         <Route path="provinces/:code/location/" element={<LocationPage />} />
                         <Route path="/schedule" element={<SchedulePage />} />
                         <Route path="/store" element={<StorePage />} />
+                        <Route path="/store/:storeId" element={<StoreDetailPage />} />
+                        <Route path="/find-store" element={<FindStorePage />} />
                         <Route path="auth" element={<AuthLayout />}>
                             <Route index element={<Navigate to="/auth/sign-in" />} />
                             <Route path="sign-in" element={<SignInPage />} />
@@ -47,6 +53,12 @@ export default function App() {
                         <Route path="dashboard" element={<DashBoardPage />} />
                         <Route path="users" element={<UsersPage />} />
                         <Route path="location" element={<LocationPage />} />
+                    </Route>
+                    <Route exact path="/" element={<PrivateRoute />}>
+                        <Route exact path="/unitravel" element={<SocialLayout />}>
+                            <Route index element={<Navigate to="/unitravel/new-feeds" />} />
+                            <Route path="new-feeds" element={<SocialPage />} />
+                        </Route>
                     </Route>
                 </Routes>
             </Router>

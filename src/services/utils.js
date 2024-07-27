@@ -1,6 +1,6 @@
-const setCookie = (key, value, expiredTime) => {
+const setCookie = (key, value, days) => {
     const date = new Date();
-    date.setTime(date.getTime() + expiredTime);
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000); // Convert days to milliseconds
     document.cookie = `${key}=${value}; expires=${date.toUTCString()}; path=/`;
 };
 

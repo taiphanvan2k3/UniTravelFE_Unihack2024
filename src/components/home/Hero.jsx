@@ -1,6 +1,6 @@
 import { faCalendarDays, faLocationDot, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Bana } from "@/assets/images";
+import { beach } from "@/assets/images";
 function Hero() {
     return (
         <div className="w-full h-[700px] flex justify-center items-center p-10 ">
@@ -9,7 +9,7 @@ function Hero() {
                     <div className="">
                         <p className="text-lg font-bold text-primary-100 font-poppins">
                             Savor life is richness, explore widely{" "}
-                            <span className="text-slate-400 font-semibold">
+                            <span className="text-primary-200 font-semibold">
                                 {" "}
                                 - finding identity and purpose through exhilarating travel adventures
                             </span>
@@ -36,7 +36,7 @@ function Hero() {
                         </div>
                         <div className="col-span-2 flex items-center justify-end">
                             <div className="size-16 rounded-full bg-white flex items-center justify-center">
-                                <FontAwesomeIcon icon={faSearch} className="text-sky-400 size-7" />
+                                <FontAwesomeIcon icon={faSearch} className="text-primary-200 size-7" />
                             </div>
                         </div>
                     </div>
@@ -44,9 +44,9 @@ function Hero() {
                 <div className="col-span-1 flex  justify-center">
                     <div className="h-full w-full flex justify-center items-start">
                         <img
-                            src={Bana}
+                            src={beach}
                             alt="hero"
-                            className="object-cover h-[500px] w-96 rounded-2xl hover:scale-105 duration-500"
+                            className="object-cover h-[550px] w-96 rounded-2xl hover:scale-105 duration-500"
                         />
                     </div>
                 </div>

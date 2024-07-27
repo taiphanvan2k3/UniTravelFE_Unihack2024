@@ -11,30 +11,29 @@ import UserDropdown from "./UserDropdown";
 const travelPages = [
     { title: "Home", path: ROUTE_CONSTANTS.HOME_PAGE },
     { title: "Provinces", path: ROUTE_CONSTANTS.PROVINCES_PAGE },
-    { title: "Bookings", path: ROUTE_CONSTANTS.BOOKING_PAGE },
-    { title: "Reviews", path: ROUTE_CONSTANTS.REVIEWS_PAGE },
     { title: "Schedule", path: ROUTE_CONSTANTS.SCHEDULE_PAGE },
+    { title: "Find Store", path: ROUTE_CONSTANTS.FIND_STORE_PAGE },
 ];
 const storeOwnerPages = [
     { title: "Home", path: ROUTE_CONSTANTS.HOME_PAGE },
     { title: "Store", path: ROUTE_CONSTANTS.STORE_PAGE },
 ];
 function NavBar() {
+    console.log("Re-render");
     const { auth } = useContext(AuthContext);
+    console.log(auth.user);
     const [pages, setPages] = useState(travelPages);
     useEffect(() => {
-        if (auth?.user?.roles && auth.user.roles.includes("store-owner")) {
+        if (auth?.user && auth.user.roles.includes("store-owner")) {
+            console.log("Store owner");
             setPages(storeOwnerPages);
         } else {
             setPages(travelPages);
         }
-    }, [auth?.user?.roles]);
+    }, [auth.user]);
 
-    // if (auth.user.roles.includes("ROLE_ADMIN")) {
-    //     setPages(storeOwnerPages);
-    // }
     return (
-        <nav className="w-full px-8 py-2">
+        <nav className="w-full px-8 py-2 bg-white">
             <div className="flex justify-around items-center">
                 <Link to={ROUTE_CONSTANTS.HOME_PAGE}>
                     <img src={logo} alt="" className="h-28" />

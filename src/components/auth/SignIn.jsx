@@ -58,14 +58,9 @@ function SignIn() {
                 duration: 3000,
                 isClosable: true,
             });
-
-            // Redirect về trang trước đó
-            const redirect = getCookieValue("redirect") || ROUTE_CONSTANTS.HOME_PAGE;
-            setCookie("redirect", "", 0);
-            navigate(redirect);
         } catch (error) {
             const errorMessage =
-                error.message == "Invalid email or password" || "Email is not verified"
+                error.message === "Invalid email or password" || error.message === "Email is not verified"
                     ? error.message
                     : "Internal server error";
             toast({

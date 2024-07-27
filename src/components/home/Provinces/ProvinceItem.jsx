@@ -1,31 +1,31 @@
-import { Flex, Image, Stack, Text } from "@chakra-ui/react";
-import { vietnam } from "@/assets/images";
+import { Grid, GridItem, Image, Text, VStack } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 // eslint-disable-next-line react/prop-types
-function ProvinceItem({ code, title, thumbnailUrl }) {
+function ProvinceItem({ code, title, thumbnailUrl, description }) {
     return (
         <Link to={`/provinces/${code}`}>
-            <Stack
-                justifyContent={"space-between"}
-                height={"100%"}
-                width={"100%"}
+            <Grid
+                _hover={{ boxShadow: "2xl", transitionDuration: "0.5s" }}
                 boxShadow={"lg"}
-                className="hover:scale-105 duration-300 ease-in-out group"
                 borderRadius={"lg"}
-                padding={"20px"}
-                cursor={"pointer"}
+                templateColumns={["repeat(4, 1fr)"]}
+                templateRows={["repeat(2, 1fr)"]}
+                padding={5}
             >
-                <Image src={thumbnailUrl} width={"100%"} height={"90%"} borderRadius={"lg"} />
-                <Flex>
-                    <Text
-                        fontWeight={"semibold"}
-                        className="text-lg  text-black group-hover:text-primary-100 duration-300"
-                        marginTop={"3px"}
-                    >
-                        {title}
-                    </Text>
-                </Flex>
-            </Stack>
+                <GridItem colSpan={2} rowSpan={2}>
+                    <Image height={"100%"} borderRadius={"lg"} src={thumbnailUrl} />
+                </GridItem>
+                <GridItem colSpan={2} rowSpan={2} paddingX={4}>
+                    <VStack alignItems={"start"} justifyContent={"space-evenly"} height={"100%"}>
+                        <Text className="text-primary-100 font-roboto" fontWeight={"bold"} fontSize={"xl"}>
+                            {title}
+                        </Text>
+                        <Text fontWeight={"semibold"} color={"gray"}>
+                            {description}
+                        </Text>
+                    </VStack>
+                </GridItem>
+            </Grid>
         </Link>
     );
 }

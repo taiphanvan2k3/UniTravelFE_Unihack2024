@@ -7,6 +7,7 @@ const ROUTE_CONSTANTS = {
     BOOKING_PAGE: "/booking",
     PROVINCES_PAGE: "/provinces",
     STORE_PAGE: "/store",
+    FIND_STORE_PAGE: "/find-store",
     SCHEDULE_PAGE: "/schedule",
 };
 

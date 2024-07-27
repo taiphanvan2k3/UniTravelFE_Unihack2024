@@ -10,12 +10,9 @@ import {
 } from "@chakra-ui/react";
 import PropTypes from "prop-types";
 
-function ScheduleItem({ timeOnDate, activities }) {
+function ScheduleLocationItem({ activities }) {
     return (
         <Box boxShadow={"md"} borderRadius="lg" p={4} className="hover:scale-105 duration-300 ease-in-out bg-white">
-            <Text fontSize="lg" fontWeight="bold" marginBottom={2} className="font-roboto text-primary-200">
-                {timeOnDate}
-            </Text>
             <Accordion defaultIndex={[0]} allowMultiple>
                 {activities.map((activity, index) => (
                     <AccordionItem key={index}>
@@ -45,10 +42,8 @@ function ScheduleItem({ timeOnDate, activities }) {
         </Box>
     );
 }
-
-ScheduleItem.propTypes = {
-    timeOnDate: PropTypes.string,
+ScheduleLocationItem.propTypes = {
     activities: PropTypes.array,
 };
 
-export default ScheduleItem;
+export default ScheduleLocationItem;

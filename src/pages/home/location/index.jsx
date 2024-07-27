@@ -1,5 +1,4 @@
 import {
-    Box,
     Button,
     Divider,
     Flex,
@@ -25,7 +24,7 @@ import useLocation from "@/hooks/useLocation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenNib, faStar } from "@fortawesome/free-solid-svg-icons";
 import { DefaultAvatar01 } from "@/assets/images";
-import { Fragment, useContext } from "react";
+import { Fragment, useContext, useEffect } from "react";
 import Comment from "@/components/home/Comment";
 import { extractTextFromDescription } from "@/services/utils";
 import { AuthContext } from "@/contexts/AuthContext";
@@ -38,6 +37,20 @@ function LocationPage() {
     const roles = auth.user?.roles;
     const navigate = useNavigate();
     const { location } = useLocation();
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const url = `${import.meta.env.VITE_SERVER_BASE_URL}${import.meta.env.VITE_PROVINCES_EXPERIENCE_LOCATIONS}/${location.id}${import.meta.env.VITE_POSTS_URL}?pageIndex=1&pageSize=10`;
+                const result = await fetch(url);
+                console.log(await result.json());
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        if (location.id) {
+            fetchPosts();
+        }
+    }, [location.id]);
     const { isOpen, onOpen, onClose } = useDisclosure();
     return (
         <>
