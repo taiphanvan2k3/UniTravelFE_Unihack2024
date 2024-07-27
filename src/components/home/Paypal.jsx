@@ -1,58 +1,78 @@
-import React from 'react';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import PropTypes from "prop-types";
 
-function PaypalComponent({ locationName }) {
-    const price = 500; // Assuming a static price for demonstration
+PaypalComponent.propTypes = {
+    locationName: PropTypes.string,
+    totalPrice: PropTypes.number,
+    childCount: PropTypes.number,
+    childPrice: PropTypes.number,
+    adultCount: PropTypes.number,
+    adultPrice: PropTypes.number,
+    date: PropTypes.string,
+};
 
-    function createOrder() {
-        return fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/social/create-payment`, {
+function PaypalComponent({ locationName, totalPrice, childCount, childPrice, adultCount, adultPrice, date }) {
+    localStorage.setItem(
+        "paypalObj",
+        JSON.stringify({ locationName, totalPrice, childCount, childPrice, adultCount, adultPrice, date })
+    );
+    async function createOrder() {
+        console.log(JSON.parse(localStorage.getItem("paypalObj")));
+        const response = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/social/create-payment`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                price: price
+                price: JSON.parse(localStorage.getItem("paypalObj")).totalPrice,
             }),
-        })
-            .then((response) => response.json())
-            .then((order) => order.id);
+        });
+        const order = await response.json();
+        return order.id;
     }
 
-    function onApprove(data) {
+    async function onApprove(data) {
         console.log("data approved", data);
-        return fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/social/capture-payment`, {
+        const response = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/social/capture-payment`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                orderId: data.orderID
-            })
-        })
-        .then((response) => response.json())
-        .then((orderData) => {
-            const name = orderData.payer.name.given_name;
-            console.log("orderData", orderData);
-            fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/social/send-email`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    orderData: orderData,
-                    locationName: locationName
-                })
-            })
-            alert(`Transaction completed by ${name}`);
+                orderId: data.orderID,
+            }),
         });
+        const orderData = await response.json();
+        const name = orderData.payer.name.given_name;
+        const { totalPrice, childCount, childPrice, adultCount, adultPrice, locationName, date } = JSON.parse(
+            localStorage.getItem("paypalObj")
+        );
+        fetch(`${import.meta.env.VITE_SERVER_BASE_URL}/social/send-email`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                orderData: orderData,
+                locationName: locationName,
+                availableDate: date,
+                totalPrice: totalPrice,
+                tickets: [
+                    { ticketType: "Child", quantity: childCount, price: childPrice },
+                    { ticketType: "Adult", quantity: adultCount, price: adultPrice },
+                ],
+            }),
+        });
+        alert(`Transaction completed by ${name}`);
     }
 
     return (
-        <PayPalScriptProvider options={{ clientId: "ATIa_S5Be0naaLk2ihI1yKpGXExZKDKKz1enI6xDEc8qCjS_DLajcSOxWjq-ZxmiBTLn4biVDS10MZjH" }}>
-            <PayPalButtons
-                createOrder={createOrder}
-                onApprove={onApprove}
-            />
+        <PayPalScriptProvider
+            options={{
+                clientId: "ATIa_S5Be0naaLk2ihI1yKpGXExZKDKKz1enI6xDEc8qCjS_DLajcSOxWjq-ZxmiBTLn4biVDS10MZjH",
+            }}
+        >
+            <PayPalButtons createOrder={createOrder} onApprove={onApprove} />
         </PayPalScriptProvider>
     );
 }
