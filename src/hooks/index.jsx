@@ -1,5 +1,4 @@
-import { LoadingContext } from "@/contexts/LoadingContext";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 const useStoreByProvinceId = (provinceId, businessType = "all") => {
     const [storesNearBy, setStoresNearBy] = useState([]);
