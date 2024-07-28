@@ -9,6 +9,7 @@ import { LoadingContext } from "@/contexts/LoadingContext";
 import Cookies from "js-cookie";
 import { faShareFromSquare, faSignOut, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 const useOutsideClick = (handler) => {
     const ref = useRef();
     useEffect(() => {
@@ -25,6 +26,7 @@ const useOutsideClick = (handler) => {
     }, [ref]);
     return ref;
 };
+
 const getRoleName = (roleName) => {
     switch (roleName[0]) {
         case "store-owner":
@@ -46,26 +48,15 @@ const UserDropdown = ({ userInfo }) => {
     const handleLogout = async () => {
         try {
             setLoading(true);
-            const res = await fetch(`${import.meta.env.VITE_SERVER_BASE_URL}${import.meta.env.VITE_SIGNOUT_URL}`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${Cookies.get("access_token")}`,
-                },
-                body: JSON.stringify({ email: userInfo.email }),
-            });
-            if (!res.ok) {
-                throw new Error("Logout failed");
-            }
+            Cookies.remove("access_token"); // Replace 'access_token' with the name of the cookie you want to delete
+            navigate("/");
+            setCookie("redirect", "", 0);
+            setLoading(false);
             setAuth({
                 isAuthenticated: false,
                 user: null,
                 token: null,
             });
-            Cookies.remove("access_token"); // Replace 'access_token' with the name of the cookie you want to delete
-            navigate("/");
-            setCookie("redirect", "", 0);
-            setLoading(false);
         } catch (error) {
             toast({
                 title: "Logout failed",

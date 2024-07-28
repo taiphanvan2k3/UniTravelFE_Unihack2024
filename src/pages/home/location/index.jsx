@@ -10,7 +10,7 @@ function LocationPage() {
     useEffect(() => {
         const fetchLocation = async () => {
             const url = path.getDetail(id);
-            const res = await fetch(`${url}?userId=${auth.user?.userId}`);
+            const res = await fetch(`${url}?userId=${auth.user?.userId ?? ""}`);
             const data = await res.json();
             setLocation(data);
         };

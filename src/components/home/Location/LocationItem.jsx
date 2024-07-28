@@ -72,12 +72,14 @@ function LocationItem({ isCheckIn, price, address, locationName, thumbnailUrl, s
     useEffect(() => {
         setTotalPrice(locationPrice * (adultCount + childCount * 0.8));
     }, [adultCount, childCount, locationPrice]);
+
     useEffect(() => {
         setPostsData(posts);
         if (price) {
             setLocationPrice(parseInt(price.discountedPrice.replace(/\./g, "").replace(" ₫", ""), 10));
         }
     }, [posts, price]);
+    
     const navigate = useNavigate();
     const roundedScore = Math.floor(score);
     const { isOpen, onOpen, onClose } = useDisclosure();

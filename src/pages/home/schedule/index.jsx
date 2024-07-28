@@ -135,7 +135,7 @@ function SchedulePage() {
             <Modal isOpen={isOpen} onClose={onClose}>
                 <ModalOverlay />
                 <ModalContent>
-                    <ModalHeader>{isAddSchedule ? "Add schedule" : "Generate schedule"}</ModalHeader>
+                    <ModalHeader>{isAddSchedule ? "Add schedule" : "Tạo lịch trình"}</ModalHeader>
                     <ModalCloseButton />
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <ModalBody>
@@ -154,8 +154,8 @@ function SchedulePage() {
                                     <FormControl isRequired>
                                         <FormLabel>Type</FormLabel>
                                         <Select {...register("type", { required: true })}>
-                                            <option value="province">Province</option>
-                                            <option value="location">Location</option>
+                                            <option value="province">Tỉnh</option>
+                                            <option value="location">Địa điểm du lịch</option>
                                         </Select>
                                     </FormControl>
                                     <FormControl isRequired>
@@ -172,7 +172,7 @@ function SchedulePage() {
                             ) : (
                                 <>
                                     <FormControl>
-                                        <FormLabel>Province</FormLabel>
+                                        <FormLabel>Tỉnh</FormLabel>
                                         <Select
                                             placeholder="Select province"
                                             variant="flushed"
@@ -187,7 +187,7 @@ function SchedulePage() {
                                     </FormControl>
                                     {tabIndex === 0 && (
                                         <FormControl marginTop={"10px"}>
-                                            <FormLabel>Number days</FormLabel>
+                                            <FormLabel>Số ngày trải nghiệm</FormLabel>
                                             <Input type="number" onChange={(e) => setNumDays(e.target.value)} />
                                         </FormControl>
                                     )}
@@ -213,15 +213,15 @@ function SchedulePage() {
 
                         <ModalFooter>
                             <Button variant={"ghost"} mr={3} onClick={onClose}>
-                                Close
+                                Đóng
                             </Button>
                             {isAddSchedule ? (
                                 <Button colorScheme="blue" type="submit">
-                                    Submit
+                                    Gửi
                                 </Button>
                             ) : (
                                 <Button colorScheme="blue" onClick={handleClick}>
-                                    Submit
+                                    Gửi
                                 </Button>
                             )}
                         </ModalFooter>
